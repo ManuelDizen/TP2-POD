@@ -11,6 +11,8 @@ import io.grpc.ManagedChannelBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Client {
@@ -26,9 +28,10 @@ public class Client {
         clientConfig.setGroupConfig(groupConfig);
 
         // Client Network Config
-        ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
-        String[] addresses = {"192.168.1.51:5701"};
-        clientNetworkConfig.addAddress(addresses);
+        ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig()
+                .setAddresses(List.of("172.31.115.255:5701"));
+        //String[] addresses = {"192.168.1.51:5701"};
+        //clientNetworkConfig.addAddress(addresses);
         clientConfig.setNetworkConfig(clientNetworkConfig);
         HazelcastInstance hazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig);
 
