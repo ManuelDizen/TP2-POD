@@ -1,14 +1,13 @@
 package ar.edu.itba.pod.hazelcast.server;
 
-import com.google.common.graph.Network;
 import com.hazelcast.config.*;
 import com.hazelcast.core.Hazelcast;
-import io.grpc.ServerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 public class Server {
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
@@ -19,7 +18,7 @@ public class Server {
         Config config = new Config();
 
         // Group Config
-        GroupConfig groupConfig = new GroupConfig().setName("g0").setPassword("g0-pass");
+        GroupConfig groupConfig = new GroupConfig().setName("g3").setPassword("g3-pass");
         config.setGroupConfig(groupConfig);
 
 
@@ -28,9 +27,13 @@ public class Server {
 
         JoinConfig joinConfig = new JoinConfig().setMulticastConfig(multicastConfig);
 
+        System.out.println("ANTES DE PASAR POR INTERFACESCONFIG");
+
         InterfacesConfig interfacesConfig = new InterfacesConfig().
-                setInterfaces(Collections.singletonList("192.168.1.*"))
-                .setEnabled(true);
+                setInterfaces(List.of("192.168.1.*"))
+                .setEnabled(false);
+
+        System.out.println("DESPUES DE PASAR");
 
         NetworkConfig networkConfig = new NetworkConfig()
                 .setInterfaces(interfacesConfig)
@@ -39,8 +42,8 @@ public class Server {
         config.setNetworkConfig(networkConfig);
 
         // Management Center Config
-        ManagementCenterConfig managementCenterConfig = new ManagementCenterConfig().setUrl("http://localhost:8080/mancenter/").setEnabled(true);
-        config.setManagementCenterConfig(managementCenterConfig);
+        //ManagementCenterConfig managementCenterConfig = new ManagementCenterConfig().setUrl("http://localhost:8080/mancenter/").setEnabled(true);
+        //config.setManagementCenterConfig(managementCenterConfig);
 
         // Start cluster
         Hazelcast.newHazelcastInstance(config);
