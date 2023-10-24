@@ -6,14 +6,16 @@ import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
+import com.hazelcast.mapreduce.JobTracker;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import ar.edu.itba.pod.hazelcast.server.Server;
 
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
@@ -34,6 +36,11 @@ public class Client {
         //clientNetworkConfig.addAddress(addresses);
         clientConfig.setNetworkConfig(clientNetworkConfig);
         HazelcastInstance hazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig);
+
+        JobTracker tracker = hazelcastInstance.getJobTracker("query1");
+
+
+
 
         String mapName = "testMap";
         IMap<Integer, String> testMapFromMember = hazelcastInstance.getMap(mapName);
