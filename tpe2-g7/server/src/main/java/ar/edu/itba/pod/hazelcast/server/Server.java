@@ -18,7 +18,7 @@ public class Server {
         Config config = new Config();
 
         // Group Config
-        GroupConfig groupConfig = new GroupConfig().setName("g3").setPassword("g3-pass");
+        GroupConfig groupConfig = new GroupConfig().setName("g7").setPassword("g7-pass");
         config.setGroupConfig(groupConfig);
 
 
