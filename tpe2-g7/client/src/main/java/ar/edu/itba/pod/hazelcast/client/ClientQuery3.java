@@ -1,5 +1,7 @@
 package ar.edu.itba.pod.hazelcast.client;
 
+import ar.edu.itba.pod.MapReduce.models.Station;
+import ar.edu.itba.pod.MapReduce.models.Trip;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
@@ -9,7 +11,6 @@ import com.hazelcast.core.IList;
 import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.JobTracker;
 
-import models.Station;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.ParsingUtils;
@@ -22,11 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-//TODO: donde poner los models patra usarlos en el client
-import models.Trip;
-
-public class Client2 {
-    private static final Logger logger = LoggerFactory.getLogger(Client2.class);
+public class ClientQuery3 {
+    private static final Logger logger = LoggerFactory.getLogger(ClientQuery3.class);
 
     public static void main(String[] args) {
 

@@ -1,6 +1,6 @@
-package ar.edu.itba.pod.hazelcast.server.MapReduce.keypredicates;
+package ar.edu.itba.pod.MapReduce.keypredicates;
 
-import ar.edu.itba.pod.hazelcast.server.MapReduce.models.Trip;
+import ar.edu.itba.pod.MapReduce.models.Trip;
 import com.hazelcast.mapreduce.KeyPredicate;
 
 import java.util.List;

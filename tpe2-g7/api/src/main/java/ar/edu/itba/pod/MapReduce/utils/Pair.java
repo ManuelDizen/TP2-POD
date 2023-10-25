@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.hazelcast.server.utils;
+package ar.edu.itba.pod.MapReduce.utils;
 
 public class Pair<T> {
     private T first;

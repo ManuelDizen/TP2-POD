@@ -1,8 +1,8 @@
-package ar.edu.itba.pod.hazelcast.server.MapReduce.combiners;
+package ar.edu.itba.pod.MapReduce.combiners;
 
+import ar.edu.itba.pod.MapReduce.utils.Pair;
 import com.hazelcast.mapreduce.Combiner;
 import com.hazelcast.mapreduce.CombinerFactory;
-import ar.edu.itba.pod.hazelcast.server.utils.Pair;
 
 public class Query1CombinerFactory implements CombinerFactory<Pair<Integer>, Long, Long> {
 

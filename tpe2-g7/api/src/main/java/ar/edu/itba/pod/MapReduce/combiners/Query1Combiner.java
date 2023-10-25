@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.hazelcast.server.MapReduce.combiners;
+package ar.edu.itba.pod.MapReduce.combiners;
 
 import com.hazelcast.mapreduce.Combiner;
 

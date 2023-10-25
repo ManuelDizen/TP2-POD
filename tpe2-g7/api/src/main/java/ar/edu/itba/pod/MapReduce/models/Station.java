@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.hazelcast.server.MapReduce.models;
+package ar.edu.itba.pod.MapReduce.models;
 
 public class Station {
     private final Integer pk;

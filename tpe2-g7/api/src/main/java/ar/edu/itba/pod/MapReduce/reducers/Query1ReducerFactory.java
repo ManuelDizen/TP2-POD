@@ -1,8 +1,8 @@
-package ar.edu.itba.pod.hazelcast.server.MapReduce.reducers;
+package ar.edu.itba.pod.MapReduce.reducers;
 
+import ar.edu.itba.pod.MapReduce.utils.Pair;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
-import ar.edu.itba.pod.hazelcast.server.utils.Pair;
 
 //EJEMPLO EXTRAIDO DE LA TEORICA
 public class Query1ReducerFactory implements ReducerFactory<Pair<Integer>, Long, Long> {

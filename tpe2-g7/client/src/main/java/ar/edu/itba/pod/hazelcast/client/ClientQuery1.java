@@ -7,18 +7,13 @@ import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.JobTracker;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.Arrays;
+
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import ar.edu.itba.pod.hazelcast.server.Server;
-
-public class Client {
-    private static final Logger logger = LoggerFactory.getLogger(Client.class);
+public class ClientQuery1 {
+    private static final Logger logger = LoggerFactory.getLogger(ClientQuery1.class);
 
     public static void main(String[] args) {
         logger.info("hz-config Client Starting ...");

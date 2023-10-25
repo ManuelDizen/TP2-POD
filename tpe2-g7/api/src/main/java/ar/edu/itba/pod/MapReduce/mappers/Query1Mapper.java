@@ -1,9 +1,9 @@
-package ar.edu.itba.pod.hazelcast.server.MapReduce.mappers;
+package ar.edu.itba.pod.MapReduce.mappers;
 
-import ar.edu.itba.pod.hazelcast.server.MapReduce.models.Trip;
+import ar.edu.itba.pod.MapReduce.models.Trip;
+import ar.edu.itba.pod.MapReduce.utils.Pair;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
-import ar.edu.itba.pod.hazelcast.server.utils.Pair;
 
 public class Query1Mapper implements Mapper<Long, Trip, Pair<Integer>, Long>{
     private static final Long ONE = 1L;
