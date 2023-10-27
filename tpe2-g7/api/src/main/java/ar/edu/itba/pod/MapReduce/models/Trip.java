@@ -2,7 +2,7 @@ package ar.edu.itba.pod.MapReduce.models;
 
 import com.google.type.DateTime;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class Trip {
     private final LocalTime start_date;
@@ -19,7 +19,7 @@ public class Trip {
         is_member = isMember;
     }
 
-    public LocalTime getStart_date() {
+    public LocalDateTime getStart_date() {
         return start_date;
     }
 
@@ -27,7 +27,7 @@ public class Trip {
         return emplacement_pk_start;
     }
 
-    public LocalTime getEnd_date() {
+    public LocalDateTime getEnd_date() {
         return end_date;
     }
 
