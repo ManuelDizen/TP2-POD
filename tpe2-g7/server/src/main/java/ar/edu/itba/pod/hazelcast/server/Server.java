@@ -31,7 +31,7 @@ public class Server {
 
         InterfacesConfig interfacesConfig = new InterfacesConfig().
                 setInterfaces(List.of("192.168.1.*"))
-                .setEnabled(false);
+                .setEnabled(true);
 
         System.out.println("DESPUES DE PASAR");
 
