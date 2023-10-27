@@ -68,9 +68,9 @@ public class ClientQuery3 {
         for (String[] bike : bikesCSV) {
             bikes.add(new Trip(
                     LocalTime.parse(bike[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                    Integer.parseInt(bike[1]),
+                    Long.parseLong(bike[1]),
                     LocalTime.parse(bike[2], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                    Integer.parseInt(bike[3]),
+                    Long.parseLong(bike[3]),
                     Boolean.parseBoolean(bike[4])
             ));
         }
@@ -93,11 +93,7 @@ public class ClientQuery3 {
         JobTracker tracker = hazelcastInstance.getJobTracker("query1");
 
 
-        String mapName = "testMap";
-        IMap<Integer, String> testMapFromMember = hazelcastInstance.getMap(mapName);
-        testMapFromMember.set(1, "test1");
-        IMap<Integer, String> testMap = hazelcastInstance.getMap(mapName);
-        System.out.println(testMap.get(1));
+        
         //Shutdown
         HazelcastClient.shutdownAll();
     }

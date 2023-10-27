@@ -1,5 +1,9 @@
 package utils;
 
+import ar.edu.itba.pod.MapReduce.models.Station;
+import ar.edu.itba.pod.MapReduce.models.Trip;
+import com.hazelcast.core.IList;
+import com.hazelcast.core.IMap;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -9,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class ParsingUtils {
 
@@ -53,6 +57,43 @@ public class ParsingUtils {
             lines.add(tokenizedArray);
         }
         return lines;
+    }
+
+    public static void populateTrips(IMap<Long, Trip> trips, String tripsPath){
+        long ctr = 1L;
+        List<String[]> tripsCSV = ParsingUtils.parseCsv(tripsPath);
+        for (String[] bike : tripsCSV) {
+            trips.put(ctr++, new Trip(
+                    LocalTime.parse(bike[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    Long.parseLong(bike[1]),
+                    LocalTime.parse(bike[2], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    Long.parseLong(bike[3]),
+                    Boolean.parseBoolean(bike[4])
+            ));
+        }
+    }
+    public static void populateCollections(IMap<Long, Trip> trips, IList<Station> stations,
+                                           String tripsPath, String stationsPath){
+        populateTrips(trips, tripsPath);
+
+        List<String[]> stationsCSV = ParsingUtils.parseCsv(stationsPath);
+        for (String[] station : stationsCSV) {
+            stations.add(new Station(
+                    Integer.parseInt(station[0]),
+                    station[1],
+                    Double.parseDouble(station[2]),
+                    Double.parseDouble(station[3])
+            ));
+        }
+    }
+
+    public static Map<Long, String> getStationsFromCSV(String path){
+        Map<Long, String> toReturn = new HashMap<>();
+        List<String[]> stationsCSV = ParsingUtils.parseCsv(path);
+        for (String[] station : stationsCSV) {
+            toReturn.put(Long.parseLong(station[0]), station[1]);
+        }
+        return toReturn;
     }
 
 }

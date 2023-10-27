@@ -11,7 +11,7 @@ public class Query1ReducerFactory implements ReducerFactory<Pair<Integer>, Long,
         return new Query1Reducer();
     }
 
-    private class Query1Reducer extends Reducer<Long, Long>{
+    private static class Query1Reducer extends Reducer<Long, Long>{
         private long sum;
 
         @Override

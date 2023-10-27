@@ -6,12 +6,12 @@ import java.time.LocalTime;
 
 public class Trip {
     private final LocalTime start_date;
-    private final Integer emplacement_pk_start;
+    private final Long emplacement_pk_start;
     private final LocalTime end_date;
-    private final Integer emplacement_pk_end;
+    private final Long emplacement_pk_end;
     private final boolean is_member;
 
-    public Trip(LocalTime startDate, Integer emplacementPkStart, LocalTime endDate, Integer emplacementPkEnd, boolean isMember) {
+    public Trip(LocalTime startDate, Long emplacementPkStart, LocalTime endDate, Long emplacementPkEnd, boolean isMember) {
         start_date = startDate;
         emplacement_pk_start = emplacementPkStart;
         end_date = endDate;
@@ -23,7 +23,7 @@ public class Trip {
         return start_date;
     }
 
-    public Integer getEmplacement_pk_start() {
+    public Long getEmplacement_pk_start() {
         return emplacement_pk_start;
     }
 
@@ -31,7 +31,7 @@ public class Trip {
         return end_date;
     }
 
-    public Integer getEmplacement_pk_end() {
+    public Long getEmplacement_pk_end() {
         return emplacement_pk_end;
     }
 

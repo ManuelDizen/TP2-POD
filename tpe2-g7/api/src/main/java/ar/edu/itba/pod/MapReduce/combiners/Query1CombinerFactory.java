@@ -10,4 +10,23 @@ public class Query1CombinerFactory implements CombinerFactory<Pair<Integer>, Lon
     public Combiner<Long, Long> newCombiner(Pair<Integer> integerPair) {
         return new Query1Combiner();
     }
+
+    private static class Query1Combiner extends Combiner<Long, Long> {
+        private long sum;
+        @Override
+        public void combine(Long aLong) {
+            sum += aLong;
+        }
+
+        @Override
+        public Long finalizeChunk() {
+            return sum;
+        }
+
+        @Override
+        public void reset(){
+            sum = 0;
+        }
+    }
+
 }

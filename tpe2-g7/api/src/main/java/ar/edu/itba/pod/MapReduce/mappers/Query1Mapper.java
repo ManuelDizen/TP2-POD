@@ -15,8 +15,8 @@ public class Query1Mapper implements Mapper<Long, Trip, Pair<Integer>, Long>{
 
         //Ademas, un combiner recoleta las ocurrencias para emitir un único par
 
-        Integer start = trip.getEmplacement_pk_start();
-        Integer end = trip.getEmplacement_pk_end();
+        Long start = trip.getEmplacement_pk_start();
+        Long end = trip.getEmplacement_pk_end();
         Pair<Integer> pair = new Pair<>(start, end);
         context.emit(pair, ONE);
     }

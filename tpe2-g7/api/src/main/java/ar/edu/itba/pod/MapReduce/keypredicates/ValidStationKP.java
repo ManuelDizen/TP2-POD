@@ -4,14 +4,16 @@ import ar.edu.itba.pod.MapReduce.models.Trip;
 import com.hazelcast.mapreduce.KeyPredicate;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class ValidStationKP implements KeyPredicate<Trip>{
 
-    private final List<Integer> stationIds;
+    private final Set<Long> stationIds;
 
-    public ValidStationKP(List<Integer> stationIds) {
-        this.stationIds = stationIds;
+    public ValidStationKP(Map<Long, String> stationIds) {
+        this.stationIds = stationIds.keySet();
     }
 
     @Override
