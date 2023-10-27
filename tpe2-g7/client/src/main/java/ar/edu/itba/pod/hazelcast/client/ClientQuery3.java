@@ -9,16 +9,19 @@ import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IList;
 import com.hazelcast.core.IMap;
+import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 
+import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.ParsingUtils;
 import utils.PropertyNames;
 
 import java.security.InvalidParameterException;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -67,18 +70,19 @@ public class ClientQuery3 {
         //TODO: Files.line ??
         for (String[] bike : bikesCSV) {
             bikes.add(new Trip(
-                    LocalTime.parse(bike[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    LocalDateTime.parse(bike[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     Integer.parseInt(bike[1]),
-                    LocalTime.parse(bike[2], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    LocalDateTime.parse(bike[2], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     Integer.parseInt(bike[3]),
                     Boolean.parseBoolean(bike[4])
             ));
         }
 
-        IList<Station> stations = hazelcastInstance.getList("stations");
+        //IList<Station> stations = hazelcastInstance.getList("stations");
         List<String[]> stationsCSV = ParsingUtils.parseCsv(stationsPath);
         //TODO: Files.line ??
         for (String[] station : stationsCSV) {
+            List<Station> stations = new ArrayList<>();
             stations.add(new Station(
                     Integer.parseInt(station[0]),
                     station[1],
@@ -88,17 +92,16 @@ public class ClientQuery3 {
         }
 
         logger.info("Fin de la lectura de los archivos");
+        logger.info("Inicio del trabajo map/reduce");
 
-        //TODO: que es el job??
-        JobTracker tracker = hazelcastInstance.getJobTracker("query1");
+        KeyValueSource<String, Trip> keyValueSource = KeyValueSource.fromList(bikes);
+        JobTracker tracker = hazelcastInstance.getJobTracker("query3");
+        Job<String, Trip> job = tracker.newJob(keyValueSource);
 
+        // PASSARLE AL JOB EL MAPPER Y EL REDUCER
 
-        String mapName = "testMap";
-        IMap<Integer, String> testMapFromMember = hazelcastInstance.getMap(mapName);
-        testMapFromMember.set(1, "test1");
-        IMap<Integer, String> testMap = hazelcastInstance.getMap(mapName);
-        System.out.println(testMap.get(1));
-        //Shutdown
+        // WRITE TO OUTPUT
+
         HazelcastClient.shutdownAll();
     }
 }
