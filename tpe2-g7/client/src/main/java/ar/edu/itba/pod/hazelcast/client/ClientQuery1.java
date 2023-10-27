@@ -58,12 +58,12 @@ public class ClientQuery1 {
         ClientConfig clientConfig = new ClientConfig();
 
         // Group Config
-        GroupConfig groupConfig = new GroupConfig().setName("g3").setPassword("g3-pass");
+        GroupConfig groupConfig = new GroupConfig().setName("g7").setPassword("g7-pass");
         clientConfig.setGroupConfig(groupConfig);
 
         // Client Network Config
         ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig()
-                .setAddresses(List.of("172.31.115.255:5701"));
+                .setAddresses(List.of("127.0.0.1:5701"));
         //String[] addresses = {"192.168.1.51:5701"};
         //clientNetworkConfig.addAddress(addresses);
         clientConfig.setNetworkConfig(clientNetworkConfig);

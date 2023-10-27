@@ -3,14 +3,12 @@ package ar.edu.itba.pod.MapReduce.models;
 public class Station {
     private final Integer pk;
     private final String name;
-    private final double latitude;
-    private final double longitude;
+    private final Location location;
 
     public Station(Integer pk, String name, double latitude, double longitude) {
         this.pk = pk;
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.location = new Location(latitude, longitude);
     }
 
     public Integer getPk() {
@@ -22,10 +20,10 @@ public class Station {
     }
 
     public double getLatitude() {
-        return latitude;
+        return location.latitude();
     }
 
     public double getLongitude() {
-        return longitude;
+        return location.longitude();
     }
 }
