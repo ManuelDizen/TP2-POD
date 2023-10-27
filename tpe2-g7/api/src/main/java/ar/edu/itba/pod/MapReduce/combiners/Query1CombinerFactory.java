@@ -4,10 +4,10 @@ import ar.edu.itba.pod.MapReduce.utils.Pair;
 import com.hazelcast.mapreduce.Combiner;
 import com.hazelcast.mapreduce.CombinerFactory;
 
-public class Query1CombinerFactory implements CombinerFactory<Pair<Integer>, Long, Long> {
+public class Query1CombinerFactory implements CombinerFactory<Pair<Long>, Long, Long> {
 
     @Override
-    public Combiner<Long, Long> newCombiner(Pair<Integer> integerPair) {
+    public Combiner<Long, Long> newCombiner(Pair<Long> integerPair) {
         return new Query1Combiner();
     }
 

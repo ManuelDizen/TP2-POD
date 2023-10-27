@@ -4,19 +4,17 @@ import ar.edu.itba.pod.MapReduce.collators.Query1Collator;
 import ar.edu.itba.pod.MapReduce.combiners.Query1CombinerFactory;
 import ar.edu.itba.pod.MapReduce.keypredicates.ValidStationKP;
 import ar.edu.itba.pod.MapReduce.mappers.Query1Mapper;
-import ar.edu.itba.pod.MapReduce.models.Station;
 import ar.edu.itba.pod.MapReduce.models.Trip;
 import ar.edu.itba.pod.MapReduce.reducers.Query1ReducerFactory;
-import ar.edu.itba.pod.MapReduce.utils.Pair;
+import ar.edu.itba.pod.MapReduce.utils.Query1ReturnType;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IList;
+import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
-import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +26,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.concurrent.ExecutionException;
 
 import static utils.ParsingUtils.*;
 
 public class ClientQuery1 {
     private static final Logger logger = LoggerFactory.getLogger(ClientQuery1.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         logger.info("hz-config Client Starting ...");
 
         //TODO:Paramterizar todo el parseo de argumentos como el tp1
@@ -78,15 +77,15 @@ public class ClientQuery1 {
         final KeyValueSource<Long, Trip> KVSource = KeyValueSource.fromMap(trips);
         Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-q1").newJob(KVSource);
 
-        /*List<Map.Entry<Pair<String>, Long>> result = job
-                .keyPredicate(new ValidStationKP(stations))
-                .mapper(new Query1Mapper())
+        ICompletableFuture<List<Query1ReturnType>> future = job
+                .mapper(new Query1Mapper(stations.keySet()))
                 .combiner(new Query1CombinerFactory())
                 .reducer(new Query1ReducerFactory())
                 .submit(new Query1Collator(stations));
-        */
-        //TODO: Hay una cosa que esta mal pensada, que es el que el KP recibe la key de los pares,
-        // por lo que tengo que cambiar la logica inicial del KP y el mapper. El resto ya estaria.
+
+        List<Query1ReturnType> result = future.get();
+        System.out.println(result.get(0));
+
         //Shutdown
         HazelcastClient.shutdownAll();
     }
