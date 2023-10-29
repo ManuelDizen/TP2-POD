@@ -7,7 +7,7 @@ import com.hazelcast.mapreduce.CombinerFactory;
 public class Query1CombinerFactory implements CombinerFactory<Pair<Long>, Long, Long> {
 
     @Override
-    public Combiner<Long, Long> newCombiner(Pair<Long> integerPair) {
+    public Combiner<Long, Long> newCombiner(Pair<Long> pair) {
         return new Query1Combiner();
     }
 
@@ -28,5 +28,4 @@ public class Query1CombinerFactory implements CombinerFactory<Pair<Long>, Long, 
             sum = 0;
         }
     }
-
 }

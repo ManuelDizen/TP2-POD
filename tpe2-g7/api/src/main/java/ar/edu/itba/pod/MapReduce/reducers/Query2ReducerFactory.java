@@ -3,13 +3,13 @@ package ar.edu.itba.pod.MapReduce.reducers;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
-public class Query2ReducerFactory implements ReducerFactory<Integer, Double, Double> {
+public class Query2ReducerFactory implements ReducerFactory<Long, Double, Double> {
     @Override
-    public Reducer<Double, Double> newReducer(Integer integer) {
+    public Reducer<Double, Double> newReducer(Long id) {
         return new Query2Reducer();
     }
 
-    private class Query2Reducer extends Reducer<Double, Double>{
+    private static class Query2Reducer extends Reducer<Double, Double>{
         private double sum;
         private int cant;
 

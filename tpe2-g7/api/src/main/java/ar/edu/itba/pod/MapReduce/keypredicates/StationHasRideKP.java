@@ -1,12 +1,11 @@
 package ar.edu.itba.pod.MapReduce.keypredicates;
 
-import ar.edu.itba.pod.MapReduce.models.Station;
 import ar.edu.itba.pod.MapReduce.models.Trip;
 import com.hazelcast.mapreduce.KeyPredicate;
 
 import java.util.List;
 
-public class StationHasRideKP implements KeyPredicate<Integer> {
+public class StationHasRideKP implements KeyPredicate<Long> {
 
     private final List<Trip> trips;
 
@@ -15,7 +14,7 @@ public class StationHasRideKP implements KeyPredicate<Integer> {
     }
 
     @Override
-    public boolean evaluate(Integer station) {
+    public boolean evaluate(Long station) {
         for(Trip t : trips) {
             if(t.getEmplacement_pk_start().equals(station))
                 return true;

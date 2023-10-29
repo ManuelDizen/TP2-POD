@@ -1,17 +1,17 @@
 package ar.edu.itba.pod.MapReduce.models;
 
 public class Station {
-    private final Integer pk;
+    private final Long pk;
     private final String name;
     private final Location location;
 
-    public Station(Integer pk, String name, double latitude, double longitude) {
+    public Station(Long pk, String name, double latitude, double longitude) {
         this.pk = pk;
         this.name = name;
         this.location = new Location(latitude, longitude);
     }
 
-    public Integer getPk() {
+    public Long getPk() {
         return pk;
     }
 
