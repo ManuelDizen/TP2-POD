@@ -18,6 +18,7 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.HazelcastUtils;
 import utils.ParsingUtils;
 import utils.PropertyNames;
 
@@ -53,20 +54,9 @@ public class ClientQuery1 {
         String tripsPath = inPath + "/bikes.csv";
         String stationsPath = inPath + "/stations.csv";
 
-        // Client Config
-        ClientConfig clientConfig = new ClientConfig();
-
-        // Group Config
-        GroupConfig groupConfig = new GroupConfig().setName("g7").setPassword("g7-pass");
-        clientConfig.setGroupConfig(groupConfig);
-
-        // Client Network Config
-        ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig()
-                .setAddresses(List.of("127.0.0.1:5701"));
-        //String[] addresses = {"192.168.1.51:5701"};
-        //clientNetworkConfig.addAddress(addresses);
-        clientConfig.setNetworkConfig(clientNetworkConfig);
-        HazelcastInstance hazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig);
+        logger.info("Starting hazelcast instance");
+        HazelcastInstance hazelcastInstance = HazelcastUtils.startHazelcast(addresses);
+        logger.info("Hazelcast instance initiated");
 
         IMap<Long, Trip> trips = hazelcastInstance.getMap("trips");
         populateTrips(trips, tripsPath);
@@ -77,14 +67,16 @@ public class ClientQuery1 {
         final KeyValueSource<Long, Trip> KVSource = KeyValueSource.fromMap(trips);
         Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-q1").newJob(KVSource);
 
-        ICompletableFuture<List<Query1ReturnType>> future = job
+        logger.info("Starting MapReduce query...");
+        List<Query1ReturnType> result = job
                 .mapper(new Query1Mapper(stations.keySet()))
                 .combiner(new Query1CombinerFactory())
                 .reducer(new Query1ReducerFactory())
-                .submit(new Query1Collator(stations));
+                .submit(new Query1Collator(stations))
+                .get();
+        logger.info("Ending MapReduce query...");
 
-        List<Query1ReturnType> result = future.get();
-        System.out.println(result.get(0));
+
 
         //Shutdown
         HazelcastClient.shutdownAll();

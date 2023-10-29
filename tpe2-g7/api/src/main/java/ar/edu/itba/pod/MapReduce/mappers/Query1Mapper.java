@@ -15,7 +15,7 @@ public class Query1Mapper implements Mapper<Long, Trip, Pair<Long>, Long>{
     public Query1Mapper(Set<Long> stationIds) {
         this.stationIds = stationIds;
     }
-    
+
     @Override
     public void map(Long key, Trip trip, Context<Pair<Long>, Long> context) {
         Long start = trip.getEmplacement_pk_start();

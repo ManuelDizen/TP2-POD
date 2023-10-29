@@ -2,6 +2,7 @@ package utils;
 
 import ar.edu.itba.pod.MapReduce.models.Station;
 import ar.edu.itba.pod.MapReduce.models.Trip;
+import ar.edu.itba.pod.MapReduce.utils.Query1ReturnType;
 import com.hazelcast.core.IList;
 import com.hazelcast.core.IMap;
 import org.apache.commons.csv.CSVFormat;
@@ -12,7 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -64,18 +67,16 @@ public class ParsingUtils {
         List<String[]> tripsCSV = ParsingUtils.parseCsv(tripsPath);
         for (String[] bike : tripsCSV) {
             trips.put(ctr++, new Trip(
-                    LocalTime.parse(bike[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    LocalDateTime.parse(bike[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     Long.parseLong(bike[1]),
-                    LocalTime.parse(bike[2], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    LocalDateTime.parse(bike[2], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     Long.parseLong(bike[3]),
                     Boolean.parseBoolean(bike[4])
             ));
         }
     }
-    public static void populateCollections(IMap<Long, Trip> trips, IList<Station> stations,
-                                           String tripsPath, String stationsPath){
-        populateTrips(trips, tripsPath);
 
+    public static void populateStations(IList<Station> stations, String stationsPath){
         List<String[]> stationsCSV = ParsingUtils.parseCsv(stationsPath);
         for (String[] station : stationsCSV) {
             stations.add(new Station(
@@ -87,6 +88,12 @@ public class ParsingUtils {
         }
     }
 
+    public static void populateCollections(IMap<Long, Trip> trips, IList<Station> stations,
+                                           String tripsPath, String stationsPath){
+        populateTrips(trips, tripsPath);
+        populateStations(stations, stationsPath);
+    }
+
     public static Map<Long, String> getStationsFromCSV(String path){
         Map<Long, String> toReturn = new HashMap<>();
         List<String[]> stationsCSV = ParsingUtils.parseCsv(path);
@@ -94,6 +101,20 @@ public class ParsingUtils {
             toReturn.put(Long.parseLong(station[0]), station[1]);
         }
         return toReturn;
+    }
+
+    public static void Query1OutputParser(List<Query1ReturnType> dataList, String outPath) {
+        try (FileWriter writer = new FileWriter(outPath + "/query1.csv")) {
+            writer.append("From;To;Trips\n");
+            for (Query1ReturnType data : dataList) {
+                writer.append(data.getFrom()).append(';')
+                        .append(data.getTo()).append(';')
+                        .append(String.valueOf(data.getTrips()))
+                        .append('\n');
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 
 }

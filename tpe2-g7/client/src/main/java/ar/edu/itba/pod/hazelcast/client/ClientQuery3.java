@@ -71,9 +71,9 @@ public class ClientQuery3 {
         for (String[] bike : bikesCSV) {
             bikes.add(new Trip(
                     LocalDateTime.parse(bike[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                    Integer.parseInt(bike[1]),
+                    Long.parseLong(bike[1]),
                     LocalDateTime.parse(bike[2], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                    Integer.parseInt(bike[3]),
+                    Long.parseLong(bike[3]),
                     Boolean.parseBoolean(bike[4])
             ));
         }

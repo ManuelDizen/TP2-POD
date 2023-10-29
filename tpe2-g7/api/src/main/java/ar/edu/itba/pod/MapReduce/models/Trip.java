@@ -3,15 +3,16 @@ package ar.edu.itba.pod.MapReduce.models;
 import com.google.type.DateTime;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Trip {
-    private final LocalTime start_date;
+    private final LocalDateTime start_date;
     private final Long emplacement_pk_start;
-    private final LocalTime end_date;
+    private final LocalDateTime end_date;
     private final Long emplacement_pk_end;
     private final boolean is_member;
 
-    public Trip(LocalTime startDate, Long emplacementPkStart, LocalTime endDate, Long emplacementPkEnd, boolean isMember) {
+    public Trip(LocalDateTime startDate, Long emplacementPkStart, LocalDateTime endDate, Long emplacementPkEnd, boolean isMember) {
         start_date = startDate;
         emplacement_pk_start = emplacementPkStart;
         end_date = endDate;
@@ -35,7 +36,7 @@ public class Trip {
         return emplacement_pk_end;
     }
 
-    public boolean isIs_member() {
+    public boolean is_member() {
         return is_member;
     }
 }
