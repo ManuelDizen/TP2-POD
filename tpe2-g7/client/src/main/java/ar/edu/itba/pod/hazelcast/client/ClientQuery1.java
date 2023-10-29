@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.HazelcastUtils;
 import utils.ParamsModel;
+import utils.ParsingUtils;
 
 import java.security.InvalidParameterException;
 import java.util.List;
@@ -57,7 +58,7 @@ public class ClientQuery1 {
                 .submit(new Query1Collator(stations))
                 .get();
         logger.info("Ending MapReduce query...");
-        ParsingUtils.Query1OutputParser(result, outPath);
+        ParsingUtils.Query1OutputParser(result, paramsModel.getOutPath());
 
         //TODO: Timestamps para medir métricas
 
