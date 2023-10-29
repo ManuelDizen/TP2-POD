@@ -1,16 +1,15 @@
 package ar.edu.itba.pod.hazelcast.client;
 
-import ar.edu.itba.pod.MapReduce.models.Station;
+import ar.edu.itba.pod.MapReduce.collators.Query3Collator;
+import ar.edu.itba.pod.MapReduce.combiners.Query3CombinerFactory;
+import ar.edu.itba.pod.MapReduce.mappers.Query3Mapper;
 import ar.edu.itba.pod.MapReduce.models.Trip;
+import ar.edu.itba.pod.MapReduce.reducers.Query3ReducerFactory;
+import ar.edu.itba.pod.MapReduce.utils.Query3ReturnType;
 import com.hazelcast.client.HazelcastClient;
-import com.hazelcast.client.config.ClientConfig;
-import com.hazelcast.client.config.ClientNetworkConfig;
-import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IList;
 import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
-import com.hazelcast.mapreduce.JobTracker;
 
 import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
@@ -18,12 +17,10 @@ import org.slf4j.LoggerFactory;
 import utils.HazelcastUtils;
 import utils.ParamsModel;
 import utils.ParsingUtils;
-import utils.PropertyNames;
 
 import java.security.InvalidParameterException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 import static utils.ParsingUtils.getStationsFromCSV;
 import static utils.ParsingUtils.populateTrips;
@@ -31,7 +28,7 @@ import static utils.ParsingUtils.populateTrips;
 public class ClientQuery3 {
     private static final Logger logger = LoggerFactory.getLogger(ClientQuery3.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
 
         logger.info("hz-config Client Starting ...");
 
@@ -53,11 +50,20 @@ public class ClientQuery3 {
         Map<Long, String> stations = getStationsFromCSV(paramsModel.getStationsPath());
 
         final KeyValueSource<Long, Trip> KVSource = KeyValueSource.fromMap(trips);
-        Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-q1").newJob(KVSource);
+        Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-q3").newJob(KVSource);
 
         logger.info("Starting MapReduce query...");
-        // PASSARLE AL JOB EL MAPPER Y EL REDUCER
+        List<Query3ReturnType> result = job
+                .mapper(new Query3Mapper(stations.keySet()))
+                .combiner(new Query3CombinerFactory())
+                .reducer(new Query3ReducerFactory())
+                .submit(new Query3Collator(stations))
+                .get();
         logger.info("Ending MapReduce query...");
+
+        ParsingUtils.Query3OutputParser(result, paramsModel.getOutPath());
+
+        //TODO: Timestamps para medir métricas
 
         // WRITE TO OUTPUT
 

@@ -23,6 +23,11 @@ public class Query3ReducerFactory implements ReducerFactory<Long, Ride, Ride> {
            if (longest == null || longest.minutes() < ride.minutes() ) {
                longest = ride;
            }
+           if (longest.minutes() == ride.minutes()) {
+               if (longest.start_date().isAfter(ride.start_date())) {
+                   longest = ride;
+               }
+           }
         }
 
         @Override

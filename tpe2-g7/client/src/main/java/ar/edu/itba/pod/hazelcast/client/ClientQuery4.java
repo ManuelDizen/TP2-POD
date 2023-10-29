@@ -16,6 +16,7 @@ import utils.PropertyNames;
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 import static utils.ParsingUtils.getStationsFromCSV;
 import static utils.ParsingUtils.populateTrips;
@@ -23,7 +24,7 @@ import static utils.ParsingUtils.populateTrips;
 public class ClientQuery4 {
     private static final Logger logger = LoggerFactory.getLogger(ClientQuery4.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         logger.info("hz-config Client Starting ...");
 
         ParamsModel paramsModel;
