@@ -11,10 +11,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -113,6 +110,21 @@ public class ParsingUtils {
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
+        }
+    }
+
+    public static void writeOnFile(StringBuilder output, String outPath) {
+        File outFile = new File(outPath);
+        try {
+            if (!outFile.exists()) {
+                outFile.createNewFile();
+            }
+            FileWriter fw = new FileWriter(outFile);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(output.toString());
+            bw.close();
+        } catch (IOException e) {
+            throw new RuntimeException("An error occurred while creating the output file.");
         }
     }
 

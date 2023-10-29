@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.HazelcastUtils;
 import utils.ParamsModel;
+import utils.ParsingUtils;
 
 import java.security.InvalidParameterException;
 import java.util.List;
@@ -58,7 +59,23 @@ public class ClientQuery1 {
                 .get();
         logger.info("Ending MapReduce query...");
 
+        writeQ1Output(result, paramsModel.getOutPath() + "/outputQ1.csv");
+
         //Shutdown
         HazelcastClient.shutdownAll();
+    }
+
+    private static void writeQ1Output(List<Query1ReturnType> listQ1, String outPath) {
+        StringBuilder output = new StringBuilder();
+        output.append("station_a;station_b;trips_between_a_b\n");
+        listQ1.forEach((row) -> {
+            output.append(row.getFrom());
+            output.append(";");
+            output.append(row.getTo());
+            output.append(";");
+            output.append(row.getTrips());
+            output.append("\n");
+        });
+        ParsingUtils.writeOnFile(output, outPath);
     }
 }
