@@ -58,6 +58,9 @@ public class ClientQuery1 {
                 .submit(new Query1Collator(stations))
                 .get();
         logger.info("Ending MapReduce query...");
+        ParsingUtils.Query1OutputParser(result, paramsModel.getOutPath());
+
+        //TODO: Timestamps para medir métricas
 
         writeQ1Output(result, paramsModel.getOutPath() + "/outputQ1.csv");
 
