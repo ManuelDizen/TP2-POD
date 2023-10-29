@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Query2Mapper implements Mapper<Long, Trip, Integer, Double> {
+public class Query2Mapper implements Mapper<Long, Trip, Long, Double> {
 
-    private final Map<Integer, Location> stations = new HashMap<>();
+    private final Map<Long, Location> stations = new HashMap<>();
 
     public Query2Mapper(List<Station> stations) {
         for(Station station : stations) {
@@ -43,11 +43,11 @@ public class Query2Mapper implements Mapper<Long, Trip, Integer, Double> {
     }
 
     @Override
-    public void map(Long key, Trip trip, Context<Integer, Double> context) {
+    public void map(Long key, Trip trip, Context<Long, Double> context) {
         //la idea es, por cada viaje, calcular la distancia recorrida y emitir una key
         //con nombre de estación de origen y kms del viaje
-        Integer start = trip.getEmplacement_pk_start();
-        Integer end = trip.getEmplacement_pk_end();
+        Long start = trip.getEmplacement_pk_start();
+        Long end = trip.getEmplacement_pk_end();
         Double dist = distance(stations.get(start), stations.get(end));
         context.emit(start, dist);
     }

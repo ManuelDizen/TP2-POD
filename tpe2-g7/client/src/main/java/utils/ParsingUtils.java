@@ -16,7 +16,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -80,7 +79,7 @@ public class ParsingUtils {
         List<String[]> stationsCSV = ParsingUtils.parseCsv(stationsPath);
         for (String[] station : stationsCSV) {
             stations.add(new Station(
-                    Integer.parseInt(station[0]),
+                    Long.parseLong(station[0]),
                     station[1],
                     Double.parseDouble(station[2]),
                     Double.parseDouble(station[3])

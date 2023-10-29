@@ -5,13 +5,13 @@ import ar.edu.itba.pod.MapReduce.utils.Pair;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
-public class Query3ReducerFactory implements ReducerFactory<Integer, Ride, Ride> {
+public class Query3ReducerFactory implements ReducerFactory<Long, Ride, Ride> {
     @Override
-    public Reducer<Ride, Ride> newReducer(Integer integer) {
+    public Reducer<Ride, Ride> newReducer(Long id) {
         return new Query3Reducer();
     }
 
-    private class Query3Reducer extends Reducer<Ride, Ride>{
+    private static class Query3Reducer extends Reducer<Ride, Ride>{
         private Ride longest;
 
         @Override

@@ -1,9 +1,6 @@
 package ar.edu.itba.pod.MapReduce.models;
 
-import com.google.type.DateTime;
-
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class Trip {
     private final LocalDateTime start_date;
