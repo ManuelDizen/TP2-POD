@@ -1,6 +1,11 @@
 package ar.edu.itba.pod.hazelcast.client;
 
+import ar.edu.itba.pod.MapReduce.collators.Query4Collator;
+import ar.edu.itba.pod.MapReduce.combiners.Query4CombinerFactory;
+import ar.edu.itba.pod.MapReduce.mappers.Query4Mapper;
 import ar.edu.itba.pod.MapReduce.models.Trip;
+import ar.edu.itba.pod.MapReduce.reducers.Query4ReducerFactory;
+import ar.edu.itba.pod.MapReduce.utils.Query4ReturnType;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
@@ -58,10 +63,18 @@ public class ClientQuery4 {
         Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-q1").newJob(KVSource);
 
         logger.info("Starting MapReduce query...");
-        // PASSARLE AL JOB EL MAPPER Y EL REDUCER
-        logger.info("Ending MapReduce query...");
+        //TODO: fix Arguments Types for reducer
 
-        // WRITE TO OUTPUT
+//        List<Query4ReturnType> result = job
+//                .mapper(new Query4Mapper(startDate, endDate))
+//                .combiner(new Query4CombinerFactory())
+//                .reducer(new Query4ReducerFactory())
+//                .submit(new Query4Collator(stations))
+//                .get();
+        logger.info("Ending MapReduce query...");
+        //ParsingUtils.Query4OutputParser(result, paramsModel.getOutPath());
+
+        //TODO: Timestamps para medir métricas
 
         HazelcastClient.shutdownAll();
     }

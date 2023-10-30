@@ -60,12 +60,9 @@ public class ClientQuery3 {
                 .submit(new Query3Collator(stations))
                 .get();
         logger.info("Ending MapReduce query...");
-
         ParsingUtils.Query3OutputParser(result, paramsModel.getOutPath());
 
         //TODO: Timestamps para medir métricas
-
-        // WRITE TO OUTPUT
 
         HazelcastClient.shutdownAll();
     }

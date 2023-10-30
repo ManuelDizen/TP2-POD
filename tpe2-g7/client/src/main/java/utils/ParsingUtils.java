@@ -4,6 +4,7 @@ import ar.edu.itba.pod.MapReduce.models.Station;
 import ar.edu.itba.pod.MapReduce.models.Trip;
 import ar.edu.itba.pod.MapReduce.utils.Query1ReturnType;
 import ar.edu.itba.pod.MapReduce.utils.Query3ReturnType;
+import ar.edu.itba.pod.MapReduce.utils.Query4ReturnType;
 import com.hazelcast.core.IList;
 import com.hazelcast.core.IMap;
 import org.apache.commons.csv.CSVFormat;
@@ -123,6 +124,21 @@ public class ParsingUtils {
                         .append(data.getEnd()).append(';')
                         .append(data.getDate().format(f)).append(';')
                         .append(String.valueOf(data.getMinutes()))
+                        .append('\n');
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    public static void Query4OutputParser(List<Query4ReturnType> dataList, String outPath) {
+        try (FileWriter writer = new FileWriter(outPath + "/query4.csv")) {
+            writer.append("station;pos_afflux;neutral_afflux;negative_afflux\n");
+            for (Query4ReturnType data : dataList) {
+                writer.append(data.getStation()).append(';')
+                        .append(String.valueOf(data.getAfflux().getPositive())).append(';')
+                        .append(String.valueOf(data.getAfflux().getNeutral())).append(';')
+                        .append(String.valueOf(String.valueOf(data.getAfflux().getNegative())))
                         .append('\n');
             }
         } catch (IOException e) {
