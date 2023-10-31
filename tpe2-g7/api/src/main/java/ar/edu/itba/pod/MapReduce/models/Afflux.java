@@ -38,8 +38,8 @@ public class Afflux {
     }
 
     public void incrementPositive(){this.positive += 1;}
-    public void incrementNeutral(){this.positive += 1;}
-    public void incrementNegative(){this.positive += 1;}
+    public void incrementNeutral(){this.neutral += 1;}
+    public void incrementNegative(){this.negative += 1;}
 
     @Override
     public boolean equals(Object o) {

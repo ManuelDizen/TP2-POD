@@ -9,7 +9,7 @@ import java.awt.image.AreaAveragingScaleFilter;
 import java.time.LocalDate;
 import java.util.*;
 
-public class Query4Collator implements Collator<Map.Entry<Pair<Long, LocalDate>, Long>, List<Query4ReturnType>>{
+public class Query4Collator implements Collator<Map.Entry<Pair<Long, LocalDate>, Integer>, List<Query4ReturnType>>{
 
     private final Map<Long, String> stations;
     private final int n;
@@ -20,18 +20,18 @@ public class Query4Collator implements Collator<Map.Entry<Pair<Long, LocalDate>,
     }
 
     @Override
-    public List<Query4ReturnType> collate(Iterable<Map.Entry<Pair<Long, LocalDate>, Long>> iterable) {
+    public List<Query4ReturnType> collate(Iterable<Map.Entry<Pair<Long, LocalDate>, Integer>> iterable) {
         List<Query4ReturnType> toReturn = new ArrayList<>();
         Map<Long, Afflux> auxMap = new HashMap<>();
-        for(Map.Entry<Pair<Long, LocalDate>, Long> entry : iterable){
+        for(Map.Entry<Pair<Long, LocalDate>, Integer> entry : iterable){
             Long stationId = entry.getKey().getFirst();
             if(!auxMap.containsKey(stationId)){
                 auxMap.put(stationId, new Afflux(0,0,0));
             }
-            Long val = entry.getValue();
-            if (val == -1L)
+            Integer val = entry.getValue();
+            if (val == -1)
                 auxMap.get(stationId).incrementNegative();
-            else if(val == 0L)
+            else if(val == 0)
                 auxMap.get(stationId).incrementNeutral();
             else auxMap.get(stationId).incrementPositive();
         }

@@ -10,29 +10,28 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Query4CombinerFactory implements CombinerFactory<Pair<Long, LocalDate>, Long, Long> {
+public class Query4CombinerFactory implements CombinerFactory<Pair<Long, LocalDate>, Integer, Integer> {
 
     @Override
-    public Combiner<Long, Long> newCombiner(Pair<Long, LocalDate> longLocalDatePair) {
+    public Combiner<Integer, Integer> newCombiner(Pair<Long, LocalDate> longLocalDatePair) {
         return new Query4Combiner();
     }
 
-    private static class Query4Combiner extends Combiner<Long, Long>{
-        private Map<LocalDate, Long> map = new HashMap<>();
-        private Long sum = 0L;
+    private static class Query4Combiner extends Combiner<Integer, Integer>{
+        private Integer sum = 0;
 
         @Override
         public void reset(){
-            map.clear();
+            sum = 0;
         }
 
         @Override
-        public void combine(Long aLong) {
+        public void combine(Integer aLong) {
             sum += aLong;
         }
 
         @Override
-        public Long finalizeChunk() {
+        public Integer finalizeChunk() {
             return sum;
         }
     }

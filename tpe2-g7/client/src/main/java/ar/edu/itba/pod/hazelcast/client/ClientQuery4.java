@@ -21,6 +21,7 @@ import utils.PropertyNames;
 import javax.management.Query;
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -45,8 +46,9 @@ public class ClientQuery4 {
         LocalDate startDate;
         LocalDate endDate;
         try{
-            startDate = LocalDate.parse(ParsingUtils.getSystemProperty(PropertyNames.START_DATE).orElseThrow());
-            endDate = LocalDate.parse(ParsingUtils.getSystemProperty(PropertyNames.END_DATE).orElseThrow());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            startDate = LocalDate.parse(ParsingUtils.getSystemProperty(PropertyNames.START_DATE).orElseThrow(), formatter);
+            endDate = LocalDate.parse(ParsingUtils.getSystemProperty(PropertyNames.END_DATE).orElseThrow(), formatter);
             if(endDate.isBefore(startDate)){
                 logger.error("enddate cannot be before start date. Exiting.");
                 return;

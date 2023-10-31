@@ -10,28 +10,25 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Query4Mapper implements Mapper<Long, Trip, Pair<Long, LocalDate>, Long>{
-
-    //TODO: creo que me faltan quedarme con los stationsIDS
-    private static final Long ONE = 1L;
-    private static final Long MINUSONE = -1L;
-    private static final Long ZERO = 0L;
+public class Query4Mapper implements Mapper<Long, Trip, Pair<Long, LocalDate>, Integer>{
 
     public Query4Mapper() {}
 
     @Override
-    public void map(Long aLong, Trip trip, Context<Pair<Long, LocalDate>, Long> context) {
+    public void map(Long aLong, Trip trip, Context<Pair<Long, LocalDate>, Integer> context) {
         Long start = trip.getEmplacement_pk_start();
         Long end = trip.getEmplacement_pk_end();
         LocalDate start_date = LocalDate.from(trip.getStart_date());
         LocalDate end_date = LocalDate.from(trip.getEnd_date());
         if(start == end){
-            context.emit(new Pair<>(start, start_date), ZERO);
-            context.emit(new Pair<>(end, end_date), ZERO);
+            if(start_date.getDayOfYear() != end_date.getDayOfYear()) {
+                context.emit(new Pair<>(start, start_date), 0);
+                context.emit(new Pair<>(end, end_date), 0);
+            }
         }
         else{
-            context.emit(new Pair<>(start, start_date), MINUSONE);
-            context.emit(new Pair<>(end, end_date), ONE);
+            context.emit(new Pair<>(start, start_date), -1);
+            context.emit(new Pair<>(end, end_date), 1);
         }
     }
 }

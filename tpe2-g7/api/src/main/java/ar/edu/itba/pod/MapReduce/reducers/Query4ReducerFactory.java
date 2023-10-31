@@ -10,26 +10,26 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Query4ReducerFactory implements ReducerFactory<Pair<Long, LocalDate>, Long, Long> {
+public class Query4ReducerFactory implements ReducerFactory<Pair<Long, LocalDate>, Integer, Integer> {
     @Override
-    public Reducer<Long, Long> newReducer(Pair<Long, LocalDate> longLocalDatePair) {
+    public Reducer<Integer, Integer> newReducer(Pair<Long, LocalDate> longLocalDatePair) {
         return new Query4Reducer();
     }
 
-    private static class Query4Reducer extends Reducer<Long, Long>{
-        private Long sum = 0L;
+    private static class Query4Reducer extends Reducer<Integer, Integer>{
+        private Integer sum = 0;
 
         @Override
-        public void reduce(Long aLong) {
-            sum += aLong;
+        public void reduce(Integer a) {
+            sum += a;
         }
 
         //Quiero quedarme con la cantidad de dias donde la afluencia neta fue positiva
         //neutral o negativa
         @Override
-        public Long finalizeReduce() {
-            return sum > 0? 1L :
-                    (sum < 0 ? -1L : 0L);
+        public Integer finalizeReduce() {
+            return sum > 0? 1 :
+                    (sum < 0 ? -1 : 0);
         }
     }
 }
