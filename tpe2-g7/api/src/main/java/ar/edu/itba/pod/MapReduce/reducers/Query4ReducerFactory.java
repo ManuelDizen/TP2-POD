@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class Query4ReducerFactory implements ReducerFactory<Pair<Long, LocalDate>, Long, Long> {
     @Override
-    public Reducer<Long, Long> newReducer(Long id) {
+    public Reducer<Long, Long> newReducer(Pair<Long, LocalDate> longLocalDatePair) {
         return new Query4Reducer();
     }
 

@@ -18,8 +18,10 @@ import utils.ParamsModel;
 import utils.ParsingUtils;
 import utils.PropertyNames;
 
+import javax.management.Query;
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -45,6 +47,10 @@ public class ClientQuery4 {
         try{
             startDate = LocalDate.parse(ParsingUtils.getSystemProperty(PropertyNames.START_DATE).orElseThrow());
             endDate = LocalDate.parse(ParsingUtils.getSystemProperty(PropertyNames.END_DATE).orElseThrow());
+            if(endDate.isBefore(startDate)){
+                logger.error("enddate cannot be before start date. Exiting.");
+                return;
+            }
         }
         catch(NoSuchElementException | NumberFormatException f) {
             throw new InvalidParameterException("Invalid parameters. Now exiting");
@@ -62,17 +68,18 @@ public class ClientQuery4 {
         final KeyValueSource<Long, Trip> KVSource = KeyValueSource.fromMap(trips);
         Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-q1").newJob(KVSource);
 
-        logger.info("Starting MapReduce query...");
-        //TODO: fix Arguments Types for reducer
+        int totalDays = (int) startDate.until(endDate, ChronoUnit.DAYS);
 
-//        List<Query4ReturnType> result = job
-//                .mapper(new Query4Mapper(startDate, endDate))
-//                .combiner(new Query4CombinerFactory())
-//                .reducer(new Query4ReducerFactory())
-//                .submit(new Query4Collator(stations))
-//                .get();
+        logger.info("Starting MapReduce query...");
+        List<Query4ReturnType> result = job
+                .mapper(new Query4Mapper())
+                .combiner(new Query4CombinerFactory())
+                .reducer(new Query4ReducerFactory())
+                .submit(new Query4Collator(stations, totalDays))
+                .get();
+
         logger.info("Ending MapReduce query...");
-        //ParsingUtils.Query4OutputParser(result, paramsModel.getOutPath());
+        ParsingUtils.Query4OutputParser(result, paramsModel.getOutPath());
 
         //TODO: Timestamps para medir métricas
 

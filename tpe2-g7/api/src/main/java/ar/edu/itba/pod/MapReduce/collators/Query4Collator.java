@@ -1,34 +1,52 @@
 package ar.edu.itba.pod.MapReduce.collators;
 
 import ar.edu.itba.pod.MapReduce.models.Afflux;
+import ar.edu.itba.pod.MapReduce.utils.Pair;
 import ar.edu.itba.pod.MapReduce.utils.Query4ReturnType;
 import com.hazelcast.mapreduce.Collator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.awt.image.AreaAveragingScaleFilter;
+import java.time.LocalDate;
+import java.util.*;
 
-public class Query4Collator implements Collator<Map.Entry<Long, Afflux>, List<Query4ReturnType>>{
+public class Query4Collator implements Collator<Map.Entry<Pair<Long, LocalDate>, Long>, List<Query4ReturnType>>{
 
     private final Map<Long, String> stations;
+    private final int n;
 
-    public Query4Collator(Map<Long, String> stations){
+    public Query4Collator(Map<Long, String> stations, int n){
         this.stations = stations;
+        this.n = n;
     }
-    @Override
-    public List<Query4ReturnType> collate(Iterable<Map.Entry<Long, Afflux>> iterable) {
 
+    @Override
+    public List<Query4ReturnType> collate(Iterable<Map.Entry<Pair<Long, LocalDate>, Long>> iterable) {
         List<Query4ReturnType> toReturn = new ArrayList<>();
-        for(Map.Entry<Long, Afflux> entry : iterable){
-            Long key = entry.getKey();
-            Afflux value = entry.getValue();
-            String name = stations.get(key);
-            toReturn.add(new Query4ReturnType(name, value));
+        Map<Long, Afflux> auxMap = new HashMap<>();
+        for(Map.Entry<Pair<Long, LocalDate>, Long> entry : iterable){
+            Long stationId = entry.getKey().getFirst();
+            if(!auxMap.containsKey(stationId)){
+                auxMap.put(stationId, new Afflux(0,0,0));
+            }
+            Long val = entry.getValue();
+            if (val == -1L)
+                auxMap.get(stationId).incrementNegative();
+            else if(val == 0L)
+                auxMap.get(stationId).incrementNeutral();
+            else auxMap.get(stationId).incrementPositive();
+        }
+
+        for(Map.Entry<Long, Afflux> entry : auxMap.entrySet()) {
+            Afflux aff = entry.getValue();
+            if(aff.getTotal() < n){
+                aff.setNeutral(aff.getNeutral() + (n - aff.getPositive() - aff.getNegative() - aff.getNeutral()));
+            }
+            toReturn.add(new Query4ReturnType(stations.get(entry.getKey()), entry.getValue()));
         }
         toReturn.sort((o1, o2) -> {
-            int affluxDiff = o2.getAfflux().getPositive() - o1.getAfflux().getPositive();
-            if (affluxDiff != 0) return affluxDiff;
-            return o1.getStation().compareTo(o2.getStation());
+            int diff = o2.getAfflux().getPositive() - o1.getAfflux().getPositive();
+            return diff != 0 ? diff :
+                    o1.getStation().compareTo(o2.getStation());
         });
         return toReturn;
     }
