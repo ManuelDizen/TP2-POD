@@ -5,9 +5,9 @@ import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
 //EJEMPLO EXTRAIDO DE LA TEORICA
-public class Query1ReducerFactory implements ReducerFactory<Pair<Long>, Long, Long> {
+public class Query1ReducerFactory implements ReducerFactory<Pair<Long, Long>, Long, Long> {
     @Override
-    public Reducer<Long, Long> newReducer(Pair<Long> pair) {
+    public Reducer<Long, Long> newReducer(Pair<Long, Long> pair) {
         return new Query1Reducer();
     }
 

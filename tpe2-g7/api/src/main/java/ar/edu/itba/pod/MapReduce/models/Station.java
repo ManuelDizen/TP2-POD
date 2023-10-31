@@ -1,6 +1,8 @@
 package ar.edu.itba.pod.MapReduce.models;
 
-public class Station {
+import java.io.Serializable;
+
+public class Station implements Serializable {
     private final Long pk;
     private final String name;
     private final Location location;

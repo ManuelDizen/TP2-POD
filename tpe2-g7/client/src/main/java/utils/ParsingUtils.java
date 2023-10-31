@@ -60,9 +60,43 @@ public class ParsingUtils {
         return lines;
     }
 
+    public static List<String[]> parseCsvFirstNEntries(String path, int n){
+        FileReader file;
+        try{
+            file = new FileReader(path);
+        }
+        catch(FileNotFoundException e){
+            throw new RuntimeException(e.getMessage());
+        }
+
+        CSVParser parser;
+        try {
+            parser = new CSVParser(file, CSVFormat.DEFAULT);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        boolean skipFirstLine = true;
+        List<String[]> lines = new ArrayList<>();
+
+        int i = 0;
+        for (CSVRecord record : parser) {
+            if(i==n) break;
+            if (skipFirstLine) {
+                skipFirstLine = false;
+                continue;
+            }
+            String[] tokenizedArray = record.get(0).split(";");
+            lines.add(tokenizedArray);
+            i++;
+        }
+        return lines;
+    }
+
     public static void populateTrips(IMap<Long, Trip> trips, String tripsPath){
         long ctr = 1L;
-        List<String[]> tripsCSV = ParsingUtils.parseCsv(tripsPath);
+        //List<String[]> tripsCSV = ParsingUtils.parseCsv(tripsPath);
+        List<String[]> tripsCSV = ParsingUtils.parseCsvFirstNEntries(tripsPath, 10000);
         for (String[] bike : tripsCSV) {
             trips.put(ctr++, new Trip(
                     LocalDateTime.parse(bike[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),

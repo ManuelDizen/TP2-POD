@@ -28,8 +28,8 @@ public class Server {
         System.out.println("ANTES DE PASAR POR INTERFACESCONFIG");
 
         InterfacesConfig interfacesConfig = new InterfacesConfig().
-                setInterfaces(List.of("192.168.1.*"))
-                .setEnabled(true);
+                setInterfaces(List.of("192.168.0.*"))
+                .setEnabled(false);
 
         System.out.println("DESPUES DE PASAR");
 

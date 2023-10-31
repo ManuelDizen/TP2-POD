@@ -1,6 +1,8 @@
 package ar.edu.itba.pod.MapReduce.utils;
 
-public class Query1ReturnType {
+import java.io.Serializable;
+
+public class Query1ReturnType implements Serializable {
     private final String from;
     private final String to;
     private final Long trips;

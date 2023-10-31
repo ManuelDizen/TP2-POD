@@ -1,8 +1,9 @@
 package ar.edu.itba.pod.MapReduce.models;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Trip {
+public class Trip implements Serializable {
     private final LocalDateTime start_date;
     private final Long emplacement_pk_start;
     private final LocalDateTime end_date;

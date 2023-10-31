@@ -6,7 +6,7 @@ import com.hazelcast.mapreduce.Collator;
 
 import java.util.*;
 
-public class Query1Collator implements Collator<Map.Entry<Pair<Long>, Long>, List<Query1ReturnType>>{
+public class Query1Collator implements Collator<Map.Entry<Pair<Long, Long>, Long>, List<Query1ReturnType>>{
 
     private final Map<Long, String> stations;
 
@@ -14,11 +14,11 @@ public class Query1Collator implements Collator<Map.Entry<Pair<Long>, Long>, Lis
         this.stations = stations;
     }
     @Override
-    public List<Query1ReturnType> collate(Iterable<Map.Entry<Pair<Long>, Long>> iterable) {
+    public List<Query1ReturnType> collate(Iterable<Map.Entry<Pair<Long, Long>, Long>> iterable) {
 
         List<Query1ReturnType> toReturn = new ArrayList<>();
-        for(Map.Entry<Pair<Long>, Long> entry : iterable){
-            Pair<Long> key = entry.getKey();
+        for(Map.Entry<Pair<Long, Long>, Long> entry : iterable){
+            Pair<Long, Long> key = entry.getKey();
             String name1 = stations.get(key.getFirst()); // Esta xq chequeamos en collator
             String name2 = stations.get(key.getSecond());
             toReturn.add(new Query1ReturnType(
