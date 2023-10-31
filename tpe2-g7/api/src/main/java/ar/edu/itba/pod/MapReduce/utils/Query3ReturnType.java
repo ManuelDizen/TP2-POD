@@ -1,8 +1,9 @@
 package ar.edu.itba.pod.MapReduce.utils;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Query3ReturnType {
+public class Query3ReturnType implements Serializable {
     private final String start;
     private final String end;
     private final LocalDateTime date;
