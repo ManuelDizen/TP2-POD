@@ -16,11 +16,11 @@ public class Query3CombinerFactory implements CombinerFactory<Long, Ride, Ride> 
         private Ride longest;
         @Override
         public void combine(Ride ride) {
-            if (longest == null || longest.minutes() < ride.minutes() ) {
+            if (longest == null || longest.getMinutes() < ride.getMinutes() ) {
                 longest = ride;
             }
-            if (longest.minutes() == ride.minutes()) {
-                if (longest.start_date().isAfter(ride.start_date())) {
+            if (longest.getMinutes() == ride.getMinutes()) {
+                if (longest.getStart_date().isBefore(ride.getStart_date())) {
                     longest = ride;
                 }
             }
