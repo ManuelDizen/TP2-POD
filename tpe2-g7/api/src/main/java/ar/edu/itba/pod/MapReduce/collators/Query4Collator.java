@@ -39,7 +39,7 @@ public class Query4Collator implements Collator<Map.Entry<Pair<Long, LocalDate>,
         for(Map.Entry<Long, Afflux> entry : auxMap.entrySet()) {
             Afflux aff = entry.getValue();
             if(aff.getTotal() < n){
-                aff.setNeutral(aff.getNeutral() + (n - aff.getPositive() - aff.getNegative() - aff.getNeutral()));
+                aff.setNeutral(aff.getNeutral() + (n - aff.getTotal()));
             }
             toReturn.add(new Query4ReturnType(stations.get(entry.getKey()), entry.getValue()));
         }
