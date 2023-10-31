@@ -1,13 +1,10 @@
 package ar.edu.itba.pod.MapReduce.collators;
 
 import ar.edu.itba.pod.MapReduce.models.Station;
-import ar.edu.itba.pod.MapReduce.utils.Pair;
 import ar.edu.itba.pod.MapReduce.utils.Query2ReturnType;
 import com.hazelcast.mapreduce.Collator;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,15 +29,10 @@ public class Query2Collator implements Collator<Map.Entry<Long, Double>, List<Qu
             Double value = entry.getValue();
             toReturn.add(new Query2ReturnType(station.getName(), Math.floor(value*100)/100));
         }
-
-        toReturn.sort(new Comparator<Query2ReturnType>() {
-            @Override
-            public int compare(Query2ReturnType o1, Query2ReturnType o2) {
-                int c = (int) (o2.getAvg() - o1.getAvg());
-                if(c == 0)
-                    return o1.getName().compareTo(o2.getName());
-                return c;
-            }
+        toReturn.sort((o1, o2) -> {
+            int c = (int) (o2.getAvg() - o1.getAvg());
+            if (c != 0) return c;
+            return o1.getName().compareTo(o2.getName());
         });
 
         return toReturn.subList(0, n);

@@ -4,6 +4,7 @@ import ar.edu.itba.pod.MapReduce.models.Location;
 import ar.edu.itba.pod.MapReduce.models.Station;
 import ar.edu.itba.pod.MapReduce.models.Trip;
 import ar.edu.itba.pod.MapReduce.utils.Query1ReturnType;
+import ar.edu.itba.pod.MapReduce.utils.Query2ReturnType;
 import ar.edu.itba.pod.MapReduce.utils.Query3ReturnType;
 import ar.edu.itba.pod.MapReduce.utils.Query4ReturnType;
 import com.hazelcast.core.IList;
@@ -159,10 +160,23 @@ public class ParsingUtils {
         }
     }
 
+    public static void Query2OutputParser(List<Query2ReturnType> dataList, String outPath) {
+        try (FileWriter writer = new FileWriter(outPath + "/query2.csv")) {
+            writer.append("station;avg_distance\n");
+            for (Query2ReturnType data : dataList) {
+                writer.append(data.getName()).append(';')
+                        .append(String.valueOf(data.getAvg()))
+                        .append('\n');
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
     public static void Query3OutputParser(List<Query3ReturnType> dataList, String outPath) {
         try (FileWriter writer = new FileWriter(outPath + "/query3.csv")) {
             writer.append("start_station;end_station;start_date;minutes\n");
-            DateTimeFormatter f = DateTimeFormatter.ofPattern( "dd/MM/yyyy HH:mm:ss" ) ;
+            DateTimeFormatter f = DateTimeFormatter.ofPattern( "dd/MM/yyyy HH:mm:ss" );
             for (Query3ReturnType data : dataList) {
                 writer.append(data.getStart()).append(';')
                         .append(data.getEnd()).append(';')

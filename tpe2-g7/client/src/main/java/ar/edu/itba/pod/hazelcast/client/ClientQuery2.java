@@ -1,14 +1,11 @@
 package ar.edu.itba.pod.hazelcast.client;
 
-import ar.edu.itba.pod.MapReduce.collators.Query1Collator;
 import ar.edu.itba.pod.MapReduce.collators.Query2Collator;
 import ar.edu.itba.pod.MapReduce.combiners.Query2CombinerFactory;
 import ar.edu.itba.pod.MapReduce.mappers.Query2Mapper;
-import ar.edu.itba.pod.MapReduce.models.Location;
 import ar.edu.itba.pod.MapReduce.models.Station;
 import ar.edu.itba.pod.MapReduce.models.Trip;
 import ar.edu.itba.pod.MapReduce.reducers.Query2ReducerFactory;
-import ar.edu.itba.pod.MapReduce.utils.Query1ReturnType;
 import ar.edu.itba.pod.MapReduce.utils.Query2ReturnType;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.core.HazelcastInstance;
@@ -23,7 +20,6 @@ import utils.ParsingUtils;
 import utils.PropertyNames;
 
 import java.security.InvalidParameterException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -33,7 +29,7 @@ import static utils.ParsingUtils.*;
 
 public class ClientQuery2 {
 
-    private static final Logger logger = LoggerFactory.getLogger(ClientQuery1.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClientQuery2.class);
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         logger.info("hz-config Client Starting ...");
@@ -65,21 +61,17 @@ public class ClientQuery2 {
         Map<Long, Station> stations = getStationLocationsFromCSV(paramsModel.getStationsPath());
 
         final KeyValueSource<Long, Trip> KVSource = KeyValueSource.fromMap(trips);
-        Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-q1").newJob(KVSource);
+        Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-2").newJob(KVSource);
 
         logger.info("Starting MapReduce query...");
         List<Query2ReturnType> result = job
                 .mapper(new Query2Mapper(stations))
                 .combiner(new Query2CombinerFactory())
                 .reducer(new Query2ReducerFactory())
-                .submit(new Query2Collator(stations, n)).get();
+                .submit(new Query2Collator(stations, n))
+                .get();
         logger.info("Ending MapReduce query...");
-
-        String mapName = "testMap";
-        IMap<Integer, String> testMapFromMember = hazelcastInstance.getMap(mapName);
-        testMapFromMember.set(1, "test1");
-        IMap<Integer, String> testMap = hazelcastInstance.getMap(mapName);
-        System.out.println(testMap.get(1));
+        ParsingUtils.Query2OutputParser(result, paramsModel.getOutPath());
 
         //Shutdown
         HazelcastClient.shutdownAll();

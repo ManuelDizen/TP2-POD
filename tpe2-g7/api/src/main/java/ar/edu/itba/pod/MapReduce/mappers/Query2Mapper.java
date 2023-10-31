@@ -8,7 +8,6 @@ import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -27,12 +26,12 @@ public class Query2Mapper implements Mapper<Long, Trip, Long, Pair<Double, Long>
         //https://www.geeksforgeeks.org/haversine-formula-to-find-distance-between-two-points-on-a-sphere/
 
         // distance between latitudes and longitudes
-        double dLat = Math.toRadians(l2.latitude() - l1.latitude());
-        double dLon = Math.toRadians(l2.longitude() - l1.longitude());
+        double dLat = Math.toRadians(l2.getLatitude() - l1.getLatitude());
+        double dLon = Math.toRadians(l2.getLongitude() - l1.getLongitude());
 
         // convert to radians
-        double lat1 = Math.toRadians(l1.latitude());
-        double lat2 = Math.toRadians(l2.latitude());
+        double lat1 = Math.toRadians(l1.getLatitude());
+        double lat2 = Math.toRadians(l2.getLatitude());
 
         // apply formulae
         double a = Math.pow(Math.sin(dLat / 2), 2) +
