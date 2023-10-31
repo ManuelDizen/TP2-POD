@@ -1,5 +1,6 @@
 package utils;
 
+import ar.edu.itba.pod.MapReduce.models.Location;
 import ar.edu.itba.pod.MapReduce.models.Station;
 import ar.edu.itba.pod.MapReduce.models.Trip;
 import ar.edu.itba.pod.MapReduce.utils.Query1ReturnType;
@@ -131,6 +132,15 @@ public class ParsingUtils {
         List<String[]> stationsCSV = ParsingUtils.parseCsv(path);
         for (String[] station : stationsCSV) {
             toReturn.put(Long.parseLong(station[0]), station[1]);
+        }
+        return toReturn;
+    }
+
+    public static Map<Long, Station> getStationLocationsFromCSV(String path){
+        Map<Long, Station> toReturn = new HashMap<>();
+        List<String[]> stationsCSV = ParsingUtils.parseCsv(path);
+        for (String[] station : stationsCSV) {
+            toReturn.put(Long.parseLong(station[0]), new Station(Long.parseLong(station[0]), station[1], Double.parseDouble(station[2]), Double.parseDouble(station[3])));
         }
         return toReturn;
     }
