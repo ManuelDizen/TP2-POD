@@ -21,7 +21,6 @@ public class Query1Mapper implements Mapper<Long, Trip, Pair<Long, Long>, Long>{
     public void map(Long key, Trip trip, Context<Pair<Long,Long>, Long> context) {
         Long start = trip.getEmplacement_pk_start();
         Long end = trip.getEmplacement_pk_end();
-        //TODO: Acordarse de explicar en informe xq no se uso un KeyPredicate
         if(!Objects.equals(start, end)
                 && stationIds.contains(start)
                 && stationIds.contains(end)) {

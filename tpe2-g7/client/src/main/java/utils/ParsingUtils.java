@@ -180,19 +180,4 @@ public class ParsingUtils {
         }
     }
 
-    public static void writeOnFile(StringBuilder output, String outPath) {
-        File outFile = new File(outPath);
-        try {
-            if (!outFile.exists()) {
-                outFile.createNewFile();
-            }
-            FileWriter fw = new FileWriter(outFile);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(output.toString());
-            bw.close();
-        } catch (IOException e) {
-            throw new RuntimeException("An error occurred while creating the output file.");
-        }
-    }
-
 }

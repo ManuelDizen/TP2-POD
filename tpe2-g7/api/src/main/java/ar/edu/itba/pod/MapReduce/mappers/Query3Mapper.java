@@ -7,7 +7,6 @@ import com.hazelcast.mapreduce.Mapper;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;

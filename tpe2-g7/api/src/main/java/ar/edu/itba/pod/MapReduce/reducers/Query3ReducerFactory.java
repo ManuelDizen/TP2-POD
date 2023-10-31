@@ -1,7 +1,6 @@
 package ar.edu.itba.pod.MapReduce.reducers;
 
 import ar.edu.itba.pod.MapReduce.models.Ride;
-import ar.edu.itba.pod.MapReduce.utils.Pair;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
