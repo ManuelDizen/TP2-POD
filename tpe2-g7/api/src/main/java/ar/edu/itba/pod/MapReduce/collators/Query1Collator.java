@@ -19,7 +19,7 @@ public class Query1Collator implements Collator<Map.Entry<Pair<Long, Long>, Long
         List<Query1ReturnType> toReturn = new ArrayList<>();
         for(Map.Entry<Pair<Long, Long>, Long> entry : iterable){
             Pair<Long, Long> key = entry.getKey();
-            String name1 = stations.get(key.getFirst());
+            String name1 = stations.get(key.getFirst()); // Esta xq chequeamos en collator
             String name2 = stations.get(key.getSecond());
             toReturn.add(new Query1ReturnType(
                     name1, name2, entry.getValue()
@@ -33,5 +33,12 @@ public class Query1Collator implements Collator<Map.Entry<Pair<Long, Long>, Long
             return o1.getTo().compareTo(o2.getTo());
         });
         return toReturn;
+
+        //TODO lo dejo pendiente, redacto el problema.
+        // Por ahora, aca llega con entradas de tipo: id salida, id llegada, cant viajes
+        // Aca necesito cambiar los ids por los nombres, y despues ordenar por:
+        // - Descendente cantidad total
+        // - Alfabetico nombre de A
+        // - Alfabetico nombre de B
     }
 }

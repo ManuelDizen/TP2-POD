@@ -1,6 +1,7 @@
 package ar.edu.itba.pod.MapReduce.reducers;
 
 import ar.edu.itba.pod.MapReduce.models.Ride;
+import ar.edu.itba.pod.MapReduce.utils.Pair;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
@@ -19,11 +20,11 @@ public class Query3ReducerFactory implements ReducerFactory<Long, Ride, Ride> {
         }
         @Override
         public void reduce(Ride ride) {
-           if (longest == null || longest.getMinutes() < ride.getMinutes() ) {
+           if (longest == null || longest.minutes() < ride.minutes() ) {
                longest = ride;
            }
-           if (longest.getMinutes() == ride.getMinutes()) {
-               if (longest.getStart_date().isBefore(ride.getStart_date())) {
+           if (longest.minutes() == ride.minutes()) {
+               if (longest.start_date().isAfter(ride.start_date())) {
                    longest = ride;
                }
            }

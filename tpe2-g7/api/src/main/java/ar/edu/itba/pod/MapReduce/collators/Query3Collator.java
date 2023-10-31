@@ -17,14 +17,15 @@ public class Query3Collator implements Collator<Map.Entry<Long, Ride>, List<Quer
     }
     @Override
     public List<Query3ReturnType> collate(Iterable<Map.Entry<Long, Ride>> iterable) {
+
         List<Query3ReturnType> toReturn = new ArrayList<>();
         for(Map.Entry<Long, Ride> entry : iterable){
             Long key = entry.getKey();
             Ride value = entry.getValue();
             String name1 = stations.get(key);
-            String name2 = stations.get(value.getEmplacement_pk_end());
+            String name2 = stations.get(value.emplacement_pk_end());
             toReturn.add(new Query3ReturnType(
-                    name1, name2, value.getStart_date(), value.getMinutes()
+                    name1, name2, value.start_date(), value.minutes()
             ));
         }
         toReturn.sort((o1, o2) -> {
