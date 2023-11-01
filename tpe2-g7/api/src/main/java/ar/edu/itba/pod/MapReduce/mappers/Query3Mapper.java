@@ -7,7 +7,7 @@ import com.hazelcast.mapreduce.Mapper;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,7 +16,7 @@ public class Query3Mapper implements Mapper<Long, Trip, Long, Ride>{
     private final Set<Long> stationIds;
 
     public Query3Mapper(Set<Long> stationIds) {
-        this.stationIds = stationIds;
+        this.stationIds = new HashSet<>(stationIds);
     }
 
     private Integer calculateMinutes(LocalDateTime start, LocalDateTime end) {

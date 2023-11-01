@@ -24,14 +24,10 @@ public class Server {
         MulticastConfig multicastConfig = new MulticastConfig();
 
         JoinConfig joinConfig = new JoinConfig().setMulticastConfig(multicastConfig);
-
-        System.out.println("ANTES DE PASAR POR INTERFACESCONFIG");
-
+        
         InterfacesConfig interfacesConfig = new InterfacesConfig().
                 setInterfaces(List.of("192.168.0.*"))
                 .setEnabled(false);
-
-        System.out.println("DESPUES DE PASAR");
 
         NetworkConfig networkConfig = new NetworkConfig()
                 .setInterfaces(interfacesConfig)

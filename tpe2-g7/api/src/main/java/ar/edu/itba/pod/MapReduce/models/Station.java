@@ -21,11 +21,5 @@ public class Station implements Serializable {
         return name;
     }
 
-    public double getLatitude() {
-        return location.latitude();
-    }
-
-    public double getLongitude() {
-        return location.longitude();
-    }
+    public Location getLocation() { return location; }
 }

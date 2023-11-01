@@ -1,8 +1,10 @@
 package utils;
 
+import ar.edu.itba.pod.MapReduce.models.Location;
 import ar.edu.itba.pod.MapReduce.models.Station;
 import ar.edu.itba.pod.MapReduce.models.Trip;
 import ar.edu.itba.pod.MapReduce.utils.Query1ReturnType;
+import ar.edu.itba.pod.MapReduce.utils.Query2ReturnType;
 import ar.edu.itba.pod.MapReduce.utils.Query3ReturnType;
 import ar.edu.itba.pod.MapReduce.utils.Query4ReturnType;
 import com.hazelcast.core.IList;
@@ -103,7 +105,7 @@ public class ParsingUtils {
                     Long.parseLong(bike[1]),
                     LocalDateTime.parse(bike[2], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     Long.parseLong(bike[3]),
-                    Boolean.parseBoolean(bike[4])
+                    Objects.equals(bike[4], "1")
             ));
         }
     }
@@ -135,6 +137,15 @@ public class ParsingUtils {
         return toReturn;
     }
 
+    public static Map<Long, Station> getStationLocationsFromCSV(String path){
+        Map<Long, Station> toReturn = new HashMap<>();
+        List<String[]> stationsCSV = ParsingUtils.parseCsv(path);
+        for (String[] station : stationsCSV) {
+            toReturn.put(Long.parseLong(station[0]), new Station(Long.parseLong(station[0]), station[1], Double.parseDouble(station[2]), Double.parseDouble(station[3])));
+        }
+        return toReturn;
+    }
+
     public static void Query1OutputParser(List<Query1ReturnType> dataList, String outPath) {
         try (FileWriter writer = new FileWriter(outPath + "/query1.csv")) {
             writer.append("station_a;station_b;trips_between_a_b\n");
@@ -149,10 +160,23 @@ public class ParsingUtils {
         }
     }
 
+    public static void Query2OutputParser(List<Query2ReturnType> dataList, String outPath) {
+        try (FileWriter writer = new FileWriter(outPath + "/query2.csv")) {
+            writer.append("station;avg_distance\n");
+            for (Query2ReturnType data : dataList) {
+                writer.append(data.getName()).append(';')
+                        .append(String.valueOf(data.getAvg()))
+                        .append('\n');
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
     public static void Query3OutputParser(List<Query3ReturnType> dataList, String outPath) {
         try (FileWriter writer = new FileWriter(outPath + "/query3.csv")) {
             writer.append("start_station;end_station;start_date;minutes\n");
-            DateTimeFormatter f = DateTimeFormatter.ofPattern( "dd/MM/yyyy HH:mm:ss" ) ;
+            DateTimeFormatter f = DateTimeFormatter.ofPattern( "dd/MM/yyyy HH:mm:ss" );
             for (Query3ReturnType data : dataList) {
                 writer.append(data.getStart()).append(';')
                         .append(data.getEnd()).append(';')
@@ -177,21 +201,6 @@ public class ParsingUtils {
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
-        }
-    }
-
-    public static void writeOnFile(StringBuilder output, String outPath) {
-        File outFile = new File(outPath);
-        try {
-            if (!outFile.exists()) {
-                outFile.createNewFile();
-            }
-            FileWriter fw = new FileWriter(outFile);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(output.toString());
-            bw.close();
-        } catch (IOException e) {
-            throw new RuntimeException("An error occurred while creating the output file.");
         }
     }
 
