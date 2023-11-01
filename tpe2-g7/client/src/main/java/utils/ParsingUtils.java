@@ -105,7 +105,7 @@ public class ParsingUtils {
                     Long.parseLong(bike[1]),
                     LocalDateTime.parse(bike[2], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     Long.parseLong(bike[3]),
-                    Boolean.parseBoolean(bike[4])
+                    Objects.equals(bike[4], "1")
             ));
         }
     }
