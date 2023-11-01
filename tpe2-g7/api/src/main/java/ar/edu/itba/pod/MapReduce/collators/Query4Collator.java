@@ -50,7 +50,14 @@ public class Query4Collator implements Collator<Map.Entry<Pair<Long, LocalDate>,
             }
             toReturn.add(new Query4ReturnType(stations.get(entry.getKey()), entry.getValue()));
         }
-        toReturn.sort(Comparator.comparingInt((Query4ReturnType o) -> o.getAfflux().getPositive()).thenComparing(Query4ReturnType::getStation));
+        for(Map.Entry<Long, String> entry : stations.entrySet()){
+            if(!auxMap.containsKey(entry.getKey())){
+                toReturn.add(new Query4ReturnType(entry.getValue(), new Afflux(0,n,0)));
+            }
+        }
+        toReturn.sort(Comparator.comparingInt(
+                (Query4ReturnType o) -> o.getAfflux().getPositive()*-1)
+                .thenComparing(Query4ReturnType::getStation));
         return toReturn;
     }
 }

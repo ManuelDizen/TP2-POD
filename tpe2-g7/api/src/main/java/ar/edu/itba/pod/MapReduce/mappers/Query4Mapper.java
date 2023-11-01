@@ -54,6 +54,6 @@ public class Query4Mapper implements Mapper<Long, Trip, Pair<Long, LocalDate>, I
     }
 
     private boolean isValidEnd(LocalDate d2){
-        return (d2.isBefore(last) && d2.isEqual(last));
+        return (d2.isBefore(last) || d2.isEqual(last));
     }
 }
