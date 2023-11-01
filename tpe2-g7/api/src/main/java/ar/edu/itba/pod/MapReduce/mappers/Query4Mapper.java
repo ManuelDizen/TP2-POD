@@ -2,44 +2,58 @@ package ar.edu.itba.pod.MapReduce.mappers;
 
 import ar.edu.itba.pod.MapReduce.models.DayAfflux;
 import ar.edu.itba.pod.MapReduce.models.Trip;
+import ar.edu.itba.pod.MapReduce.utils.Pair;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-public class Query4Mapper implements Mapper<Long, Trip, Long, DayAfflux>{
+public class Query4Mapper implements Mapper<Long, Trip, Pair<Long, LocalDate>, Integer>{
 
-    //TODO: creo que me faltan quedarme con los stationsIDS
+    private final LocalDate first;
+    private final LocalDate last;
 
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private static final Long ONE = 1L;
-    private static final Long MINUS = -1L;
-
-    public Query4Mapper(LocalDate start, LocalDate end) {
-        this.startDate = start;
-        this.endDate = end;
+    public Query4Mapper(LocalDate first, LocalDate last) {
+        this.first = first;
+        this.last = last;
     }
 
-    private Integer calculateMinutes(LocalDateTime start, LocalDateTime end) {
-        Duration duration = Duration.between(start, end);
-        return duration.toMinutesPart();
-    }
-
-    //TODO: revisar que se cumpla: Si para un día en una estación no salieron ni
-    // llegaron bicicletas entonces se contabiliza como afluencia neta neutra.
     @Override
-    public void map(Long key, Trip trip, Context<Long, DayAfflux> context) {
+    public void map(Long aLong, Trip trip, Context<Pair<Long, LocalDate>, Integer> context) {
         Long start = trip.getEmplacement_pk_start();
         Long end = trip.getEmplacement_pk_end();
         LocalDate start_date = LocalDate.from(trip.getStart_date());
         LocalDate end_date = LocalDate.from(trip.getEnd_date());
-        if(start_date.isBefore(startDate) && end_date.isAfter(endDate)) {
-            return;
+        // TODO:Modularizar lo de abajo (dos veces lo mismo)
+        if(Objects.equals(start, end)){
+            if(start_date.getDayOfYear() != end_date.getDayOfYear()
+                && isValidStart(start_date, end_date)) {
+                //Este if queda feo, xq ademas start y end son el mismo dia, hago una validacion demas
+                context.emit(new Pair<>(start, start_date), -1);
+                context.emit(new Pair<>(end, end_date), 1);
+            }
         }
-        context.emit(start, new DayAfflux(start_date, ONE));
-        context.emit(end, new DayAfflux(end_date, MINUS));
+        else{
+            if(isValidFirst(start_date))
+                context.emit(new Pair<>(start, start_date), -1);
+            if(isValidEnd(end_date))
+                context.emit(new Pair<>(end, end_date), 1);
+        }
+    }
+
+    private boolean isValidStart(LocalDate d1, LocalDate d2){
+        return (d1.isAfter(first) || d1.isEqual(first)) && (d2.isBefore(last) && d2.isEqual(last));
+        //queda feo pero no encontre un geq/leq
+    }
+
+    private boolean isValidFirst(LocalDate d1){
+        return (d1.isAfter(first) || d1.isEqual(first));
+    }
+
+    private boolean isValidEnd(LocalDate d2){
+        return (d2.isBefore(last) || d2.isEqual(last));
     }
 }

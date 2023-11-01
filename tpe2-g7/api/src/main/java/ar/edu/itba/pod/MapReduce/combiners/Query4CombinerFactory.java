@@ -2,6 +2,7 @@ package ar.edu.itba.pod.MapReduce.combiners;
 
 import ar.edu.itba.pod.MapReduce.models.Afflux;
 import ar.edu.itba.pod.MapReduce.models.DayAfflux;
+import ar.edu.itba.pod.MapReduce.utils.Pair;
 import com.hazelcast.mapreduce.Combiner;
 import com.hazelcast.mapreduce.CombinerFactory;
 
@@ -9,48 +10,29 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Query4CombinerFactory implements CombinerFactory<Long, DayAfflux, Afflux> {
+public class Query4CombinerFactory implements CombinerFactory<Pair<Long, LocalDate>, Integer, Integer> {
+
     @Override
-    public Combiner<DayAfflux, Afflux> newCombiner(Long id) {
+    public Combiner<Integer, Integer> newCombiner(Pair<Long, LocalDate> longLocalDatePair) {
         return new Query4Combiner();
     }
 
-    private static class Query4Combiner extends Combiner<DayAfflux, Afflux>{
-        private Map<LocalDate, Long> map = new HashMap<>();
+    private static class Query4Combiner extends Combiner<Integer, Integer>{
+        private Integer sum = 0;
 
         @Override
         public void reset(){
-            map.clear();
+            sum = 0;
         }
 
         @Override
-        public void combine(DayAfflux dayAfflux) {
-            LocalDate date = dayAfflux.date();
-            Long afflux = dayAfflux.dayAfflux();
-            if(!map.containsKey(date)) {
-                map.put(date,afflux);
-            }
-            else {
-                map.put(date, map.get(date)+afflux);
-            }
+        public void combine(Integer aLong) {
+            sum += aLong;
         }
 
         @Override
-        public Afflux finalizeChunk() {
-            int positive = 0;
-            int negative = 0;
-            int neutral = 0;
-
-            for (long count : map.values()) {
-                if (count > 0) {
-                    positive++;
-                } else if (count < 0) {
-                    negative++;
-                } else {
-                    neutral++;
-                }
-            }
-            return new Afflux(positive, negative, neutral);
+        public Integer finalizeChunk() {
+            return sum;
         }
     }
 }
