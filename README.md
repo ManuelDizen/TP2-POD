@@ -38,13 +38,11 @@ correr tanto el servidor como los 4 clientes con la sintaxis indicada en la cons
 
 ## 2. Correr el servidor
 ```bash
-cd ./tmp/tpe1-g7-server-2023.2Q/
-./run-server.sh
+./runserver.sh
 ```
 ## 3. Correr los clientes de las queries
 ```bash
-cd ./tmp/tpe1-g7-client-2023.2Q
-./queryX -Daddresses='xx.xx.xx.xx:XXXX;yy.yy.yy.yy:YYYY' -DinPath=XX -DoutPath=YY [params]
+./runqueryX.sh -Daddresses='xx.xx.xx.xx:XXXX;yy.yy.yy.yy:YYYY' -DinPath=XX -DoutPath=YY [params]
 ```
 Donde
 - **queryX** es el script que corre la query X.
@@ -53,15 +51,15 @@ Donde
 - **DoutPath** indica el path donde estarán ambos archivos de salida.
 - **params** son los parámetros extras que corresponden para algunas queries.
 
-Las queries 1 y 3 se corren sin parametros adeicionales, mientras que la query 2 utiliza un _-Dn=n_ (numero entero) y la
+Las queries 1 y 3 se corren sin parametros adicionales, mientras que la query 2 utiliza un _-Dn=n_ (numero entero) y la
 y la query 4 utiliza _-DstartDate=dd/MM/yyyy_ y _-DendDate=dd/MM/yyyy_.
 
 ### Observaciones
 - En la consigna se pedía que los clientes corrieran desde terminal sin incluir la extensión `.sh` (Ejemplo: `./query1 ...`). Esto depende de la configuración de la terminal, pero en el caso de este desarrollo (y como está aclarado en este README), el proyecto se corrió con la extensión incluida.
 
 ## Integrantes:
-| Nombre                                              | Legajo |
-|-----------------------------------------------------|--------|
-| [De Simone, Franco](https://github.com/desimonef)   | 61100  |
-| [Dizenhaus, Manuel](https://github.com/ManuelDizen) | 61101  |
-| Anselmo, Sol                                        | 61278  |
+| Nombre                                                | Legajo |
+|-------------------------------------------------------|--------|
+| [De Simone, Franco](https://github.com/desimonef)                              | 61100  |
+| [Dizenhaus, Manuel](https://github.com/ManuelDizen)                              | 61101  |
+| Anselmo, Sol                                          | 61278  |

@@ -31,7 +31,7 @@ public class Query2Collator implements Collator<Map.Entry<Long, Double>, List<Qu
         auxList.sort((o1, o2) -> {
             int c = (int) (o2.getAvg() - o1.getAvg());
             if (c != 0) return c;
-            return o1.getName().compareTo(o2.getName());
+            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
         });
         List<Query2ReturnType> toReturn = new ArrayList<>();
         int i = 0;

@@ -11,7 +11,6 @@ import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
-import com.hazelcast.mapreduce.JobCompletableFuture;
 import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,12 +67,12 @@ public class ClientQuery2 {
                 "Fin de la lectura del archivo");
 
         final KeyValueSource<Long, Trip> KVSource = KeyValueSource.fromMap(trips);
-        Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-2").newJob(KVSource);
+        Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-q2").newJob(KVSource);
 
         logger.info("Starting MapReduce query...");
-
         logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
                 "Inicio del trabajo map/reduce");
+
         List<Query2ReturnType> result = job
                 .mapper(new Query2Mapper(stations))
                 .combiner(new Query2CombinerFactory())
@@ -81,12 +80,11 @@ public class ClientQuery2 {
                 .submit(new Query2Collator(stations, n))
                 .get();
 
+        ParsingUtils.Query2OutputParser(result, paramsModel.getOutPath());
 
         logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
                 "Fin del trabajo map/reduce");
-
         logger.info("Ending MapReduce query...");
-        ParsingUtils.Query2OutputParser(result, paramsModel.getOutPath());
 
         //Shutdown
         HazelcastClient.shutdownAll();

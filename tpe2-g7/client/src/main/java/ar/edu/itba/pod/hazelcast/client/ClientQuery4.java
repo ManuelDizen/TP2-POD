@@ -13,12 +13,8 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.HazelcastUtils;
-import utils.ParamsModel;
-import utils.ParsingUtils;
-import utils.PropertyNames;
+import utils.*;
 
-import javax.management.Query;
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -58,21 +54,33 @@ public class ClientQuery4 {
             throw new InvalidParameterException("Invalid parameters. Now exiting");
         }
 
+        final LogFileUtils logFile = new LogFileUtils("time4.txt", paramsModel.getOutPath(), Thread.currentThread().getStackTrace()[1].getMethodName(),
+                ClientQuery4.class.getSimpleName());
+
         logger.info("Starting hazelcast instance");
         HazelcastInstance hazelcastInstance = HazelcastUtils.startHazelcast(paramsModel.getAddresses());
         logger.info("Hazelcast instance initiated");
+
+        logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
+                "Inicio de la lectura del archivo");
 
         IMap<Long, Trip> trips = hazelcastInstance.getMap("trips");
         populateTrips(trips, paramsModel.getTripsPath());
 
         Map<Long, String> stations = getStationsFromCSV(paramsModel.getStationsPath());
 
+        logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
+                "Fin de la lectura del archivo");
+
         final KeyValueSource<Long, Trip> KVSource = KeyValueSource.fromMap(trips);
-        Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-q1").newJob(KVSource);
+        Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-q4").newJob(KVSource);
 
         int totalDays = (int) startDate.until(endDate, ChronoUnit.DAYS);
 
         logger.info("Starting MapReduce query...");
+        logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
+                "Inicio del trabajo map/reduce");
+
         List<Query4ReturnType> result = job
                 .mapper(new Query4Mapper(startDate, endDate))
                 .combiner(new Query4CombinerFactory())
@@ -80,10 +88,11 @@ public class ClientQuery4 {
                 .submit(new Query4Collator(stations, totalDays))
                 .get();
 
-        logger.info("Ending MapReduce query...");
         ParsingUtils.Query4OutputParser(result, paramsModel.getOutPath());
 
-        //TODO: Timestamps para medir métricas
+        logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
+                "Fin del trabajo map/reduce");
+        logger.info("Ending MapReduce query...");
 
         HazelcastClient.shutdownAll();
     }

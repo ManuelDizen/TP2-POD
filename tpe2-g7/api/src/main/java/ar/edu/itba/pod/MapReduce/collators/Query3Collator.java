@@ -30,7 +30,7 @@ public class Query3Collator implements Collator<Map.Entry<Long, Ride>, List<Quer
         toReturn.sort((o1, o2) -> {
             int minDiff = o2.getMinutes() - o1.getMinutes();
             if (minDiff != 0) return minDiff;
-            return o1.getStart().compareTo(o2.getStart());
+            return o1.getStart().toLowerCase().compareTo(o2.getStart().toLowerCase());
         });
         return toReturn;
     }

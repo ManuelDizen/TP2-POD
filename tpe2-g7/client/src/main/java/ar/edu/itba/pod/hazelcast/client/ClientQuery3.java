@@ -63,7 +63,6 @@ public class ClientQuery3 {
         Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-q3").newJob(KVSource);
 
         logger.info("Starting MapReduce query...");
-
         logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
                 "Inicio del trabajo map/reduce");
 
@@ -74,11 +73,11 @@ public class ClientQuery3 {
                 .submit(new Query3Collator(stations))
                 .get();
 
+        ParsingUtils.Query3OutputParser(result, paramsModel.getOutPath());
+
         logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
                 "Fin del trabajo map/reduce");
-
         logger.info("Ending MapReduce query...");
-        ParsingUtils.Query3OutputParser(result, paramsModel.getOutPath());
 
         HazelcastClient.shutdownAll();
     }

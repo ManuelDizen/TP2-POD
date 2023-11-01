@@ -28,9 +28,9 @@ public class Query1Collator implements Collator<Map.Entry<Pair<Long, Long>, Long
         toReturn.sort((o1, o2) -> {
             int tripDiff = (int) (o2.getTrips() - o1.getTrips());
             if (tripDiff != 0) return tripDiff;
-            int nameDiff = o1.getFrom().compareTo(o2.getFrom());
+            int nameDiff = o1.getFrom().toLowerCase().compareTo(o2.getFrom().toLowerCase());
             if (nameDiff != 0) return nameDiff;
-            return o1.getTo().compareTo(o2.getTo());
+            return o1.getTo().toLowerCase().compareTo(o2.getTo().toLowerCase());
         });
         return toReturn;
     }
