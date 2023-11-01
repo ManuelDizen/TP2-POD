@@ -29,16 +29,18 @@ public class Query2Collator implements Collator<Map.Entry<Long, Double>, List<Qu
             auxList.add(new Query2ReturnType(station.getName(), Math.floor(value*100)/100));
         }
         auxList.sort((o1, o2) -> {
-            int c = (int) (o2.getAvg() - o1.getAvg());
-            if (c != 0) return c;
-            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+            double c = o2.getAvg() - o1.getAvg();
+            if (c != 0) return c>0?1:-1;
+            return o1.getName().compareTo(o2.getName());
         });
         List<Query2ReturnType> toReturn = new ArrayList<>();
-        int i = 0;
-        for(Query2ReturnType e : auxList){
+        for(int i = 0; i < auxList.size(); i++){
+            // Nota al lector (?): Inicialmente se uso el metodo clasico sublist(from, to), pero
+            // el codigo fallaba por culpa de casteos de tipos internos de java. Es por ello que es un
+            // sublsit "casero"
             if(i < n) {
-                toReturn.add(e);
-                i++;
+                toReturn.add(auxList.get(i));
+                System.out.println(auxList.get(i).getAvg());
             }
             else
                 break;

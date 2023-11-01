@@ -43,6 +43,7 @@ public class ClientQuery2 {
         int n;
         try {
             n = Integer.parseInt(ParsingUtils.getSystemProperty(PropertyNames.N).orElseThrow());
+            System.out.println(n);
         }
         catch(NoSuchElementException | NumberFormatException f) {
             throw new InvalidParameterException("Invalid parameters. Now exiting");
