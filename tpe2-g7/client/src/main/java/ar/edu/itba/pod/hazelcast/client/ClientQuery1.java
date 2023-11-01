@@ -14,6 +14,7 @@ import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.HazelcastUtils;
+import utils.LogFileUtils;
 import utils.ParamsModel;
 import utils.ParsingUtils;
 
@@ -38,29 +39,44 @@ public class ClientQuery1 {
             return;
         }
 
+        final LogFileUtils logFile = new LogFileUtils("time1.txt", paramsModel.getOutPath(), Thread.currentThread().getStackTrace()[1].getMethodName(),
+                ClientQuery1.class.getSimpleName());
+
         logger.info("Starting hazelcast instance");
         HazelcastInstance hazelcastInstance = HazelcastUtils.startHazelcast(paramsModel.getAddresses());
         logger.info("Hazelcast instance initiated");
+
+        logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
+                "Inicio de la lectura del archivo");
 
         IMap<Long, Trip> trips = hazelcastInstance.getMap("trips");
         populateTrips(trips, paramsModel.getTripsPath());
 
         Map<Long, String> stations = getStationsFromCSV(paramsModel.getStationsPath());
 
+        logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
+                "Fin de la lectura del archivo");
+
         final KeyValueSource<Long, Trip> KVSource = KeyValueSource.fromMap(trips);
         Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-q1").newJob(KVSource);
 
         logger.info("Starting MapReduce query...");
+
+        logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
+                "Inicio del trabajo map/reduce");
+
         List<Query1ReturnType> result = job
                 .mapper(new Query1Mapper(stations.keySet()))
                 .combiner(new Query1CombinerFactory())
                 .reducer(new Query1ReducerFactory())
                 .submit(new Query1Collator(stations))
                 .get();
+
+        logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
+                "Fin del trabajo map/reduce");
+
         logger.info("Ending MapReduce query...");
         ParsingUtils.Query1OutputParser(result, paramsModel.getOutPath());
-
-        //TODO: Timestamps para medir métricas
 
         //Shutdown
         HazelcastClient.shutdownAll();

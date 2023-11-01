@@ -14,10 +14,7 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.HazelcastUtils;
-import utils.ParamsModel;
-import utils.ParsingUtils;
-import utils.PropertyNames;
+import utils.*;
 
 import java.security.InvalidParameterException;
 import java.util.List;
@@ -51,25 +48,42 @@ public class ClientQuery2 {
             throw new InvalidParameterException("Invalid parameters. Now exiting");
         }
 
+        final LogFileUtils logFile = new LogFileUtils("time2.txt", paramsModel.getOutPath(), Thread.currentThread().getStackTrace()[1].getMethodName(),
+                ClientQuery2.class.getSimpleName());
+
         logger.info("Starting hazelcast instance");
         HazelcastInstance hazelcastInstance = HazelcastUtils.startHazelcast(paramsModel.getAddresses());
         logger.info("Hazelcast instance initiated");
+
+        logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
+                "Inicio de la lectura del archivo");
 
         IMap<Long, Trip> trips = hazelcastInstance.getMap("trips");
         populateTrips(trips, paramsModel.getTripsPath());
 
         Map<Long, Station> stations = getStationLocationsFromCSV(paramsModel.getStationsPath());
 
+        logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
+                "Fin de la lectura del archivo");
+
         final KeyValueSource<Long, Trip> KVSource = KeyValueSource.fromMap(trips);
         Job<Long, Trip> job = hazelcastInstance.getJobTracker("g7-2").newJob(KVSource);
 
         logger.info("Starting MapReduce query...");
+
+        logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
+                "Inicio del trabajo map/reduce");
+
         List<Query2ReturnType> result = job
                 .mapper(new Query2Mapper(stations))
                 .combiner(new Query2CombinerFactory())
                 .reducer(new Query2ReducerFactory())
                 .submit(new Query2Collator(stations, n))
                 .get();
+
+        logFile.writeTimestampsLogger(String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()),
+                "Fin del trabajo map/reduce");
+
         logger.info("Ending MapReduce query...");
         ParsingUtils.Query2OutputParser(result, paramsModel.getOutPath());
 
