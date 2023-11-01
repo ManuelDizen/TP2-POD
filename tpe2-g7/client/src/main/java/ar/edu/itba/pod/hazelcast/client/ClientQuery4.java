@@ -74,7 +74,7 @@ public class ClientQuery4 {
 
         logger.info("Starting MapReduce query...");
         List<Query4ReturnType> result = job
-                .mapper(new Query4Mapper())
+                .mapper(new Query4Mapper(startDate, endDate))
                 .combiner(new Query4CombinerFactory())
                 .reducer(new Query4ReducerFactory())
                 .submit(new Query4Collator(stations, totalDays))

@@ -3,6 +3,7 @@ package ar.edu.itba.pod.MapReduce.collators;
 import ar.edu.itba.pod.MapReduce.models.Afflux;
 import ar.edu.itba.pod.MapReduce.utils.Pair;
 import ar.edu.itba.pod.MapReduce.utils.Query4ReturnType;
+import com.hazelcast.client.impl.protocol.task.NoSuchMessageTask;
 import com.hazelcast.mapreduce.Collator;
 
 import java.awt.image.AreaAveragingScaleFilter;
@@ -29,13 +30,19 @@ public class Query4Collator implements Collator<Map.Entry<Pair<Long, LocalDate>,
                 auxMap.put(stationId, new Afflux(0,0,0));
             }
             Integer val = entry.getValue();
-            if (val == -1)
+            if (val == -1) {
                 auxMap.get(stationId).incrementNegative();
-            else if(val == 0)
+            }
+            else if(val == 0) {
                 auxMap.get(stationId).incrementNeutral();
-            else auxMap.get(stationId).incrementPositive();
+            }
+            else if(val == 1) {
+                auxMap.get(stationId).incrementPositive();
+            }
+            else{
+                System.out.printf("Valor ilegal!!! es " + val);
+            }
         }
-
         for(Map.Entry<Long, Afflux> entry : auxMap.entrySet()) {
             Afflux aff = entry.getValue();
             if(aff.getTotal() < n){
@@ -43,11 +50,7 @@ public class Query4Collator implements Collator<Map.Entry<Pair<Long, LocalDate>,
             }
             toReturn.add(new Query4ReturnType(stations.get(entry.getKey()), entry.getValue()));
         }
-        toReturn.sort((o1, o2) -> {
-            int diff = o2.getAfflux().getPositive() - o1.getAfflux().getPositive();
-            return diff != 0 ? diff :
-                    o1.getStation().compareTo(o2.getStation());
-        });
+        toReturn.sort(Comparator.comparingInt((Query4ReturnType o) -> o.getAfflux().getPositive()).thenComparing(Query4ReturnType::getStation));
         return toReturn;
     }
 }

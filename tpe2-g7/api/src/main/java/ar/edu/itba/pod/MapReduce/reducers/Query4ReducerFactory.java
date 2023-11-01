@@ -17,11 +17,15 @@ public class Query4ReducerFactory implements ReducerFactory<Pair<Long, LocalDate
     }
 
     private static class Query4Reducer extends Reducer<Integer, Integer>{
-        private Integer sum = 0;
+        private Integer sum;
 
         @Override
-        public void reduce(Integer a) {
-            sum += a;
+        public void beginReduce(){
+            sum = 0;
+        }
+        @Override
+        public void reduce(Integer aLong) {
+            sum += aLong;
         }
 
         //Quiero quedarme con la cantidad de dias donde la afluencia neta fue positiva
