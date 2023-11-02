@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 public class ParsingUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(ParsingUtils.class);
-    private static final int MAX_LINES_TO_READ = 800000;
+    private static final int MAX_LINES_TO_READ = 1000000;
 
     public static Optional<String> getSystemProperty(String name){
         final String prop = System.getProperty(name);
@@ -138,11 +138,10 @@ public class ParsingUtils {
                         .forEach(aux::add);
                 i++;
 
-                // Add each BikeRent object to the bikesIMap with a counter as the key
+                // Add each Trip object to the bikesIMap with a counter as the key
                 for (int j = 0; j < aux.size(); j++) {
                     bikesIMap.put((long) i * BATCH_SIZE + j, aux.get(j));
                 }
-                System.out.println("Procese un batch!!!");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

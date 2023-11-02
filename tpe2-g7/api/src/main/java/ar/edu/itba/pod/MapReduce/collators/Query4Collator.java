@@ -55,9 +55,11 @@ public class Query4Collator implements Collator<Map.Entry<Pair<Long, LocalDate>,
                 toReturn.add(new Query4ReturnType(entry.getValue(), new Afflux(0,n,0)));
             }
         }
-        toReturn.sort(Comparator.comparingInt(
-                (Query4ReturnType o) -> o.getAfflux().getPositive()*-1)
-                .thenComparing(Query4ReturnType::getStation));
+        toReturn.sort((o1, o2) -> {
+            int minDiff = o2.getAfflux().getPositive() - o1.getAfflux().getPositive();
+            if (minDiff != 0) return minDiff;
+            return o1.getStation().toLowerCase().compareTo(o2.getStation().toLowerCase());
+        });
         return toReturn;
     }
 }

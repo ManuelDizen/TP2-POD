@@ -60,6 +60,7 @@ public class ClientQuery2 {
 
         IMap<Long, Trip> trips = hazelcastInstance.getMap("trips");
         populateTrips(trips, paramsModel.getTripsPath());
+        //fillBikesIMap(trips, paramsModel.getTripsPath()
 
         Map<Long, Station> stations = getStationLocationsFromCSV(paramsModel.getStationsPath());
 
