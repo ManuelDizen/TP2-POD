@@ -51,8 +51,8 @@ public class ClientQuery1 {
                 "Inicio de la lectura del archivo");
 
         IMap<Long, Trip> trips = hazelcastInstance.getMap("trips");
-        //populateTrips(trips, paramsModel.getTripsPath());
-        fillBikesIMap(trips, paramsModel.getTripsPath());
+        populateTrips(trips, paramsModel.getTripsPath());
+        //fillBikesIMap(trips, paramsModel.getTripsPath());
 
         Map<Long, String> stations = getStationsFromCSV(paramsModel.getStationsPath());
 

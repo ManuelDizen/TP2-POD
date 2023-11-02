@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 public class ParsingUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(ParsingUtils.class);
+    private static final int MAX_LINES_TO_READ = 800000;
 
     public static Optional<String> getSystemProperty(String name){
         final String prop = System.getProperty(name);
@@ -68,6 +69,7 @@ public class ParsingUtils {
     }
 
     public static List<String[]> parseCsvFirstNEntries(String path, int n){
+        // Reads up to n lines of csv files
         FileReader file;
         try{
             file = new FileReader(path);
@@ -103,7 +105,7 @@ public class ParsingUtils {
     public static void populateTrips(IMap<Long, Trip> trips, String tripsPath){
         long ctr = 1L;
         //List<String[]> tripsCSV = ParsingUtils.parseCsv(tripsPath);
-        List<String[]> tripsCSV = ParsingUtils.parseCsvFirstNEntries(tripsPath, 10000);
+        List<String[]> tripsCSV = ParsingUtils.parseCsvFirstNEntries(tripsPath, MAX_LINES_TO_READ);
         for (String[] bike : tripsCSV) {
             trips.put(ctr++, new Trip(
                     LocalDateTime.parse(bike[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
@@ -159,12 +161,6 @@ public class ParsingUtils {
         }
     }
 
-    public static void populateCollections(IMap<Long, Trip> trips, IList<Station> stations,
-                                           String tripsPath, String stationsPath){
-        populateTrips(trips, tripsPath);
-        populateStations(stations, stationsPath);
-    }
-
     public static Map<Long, String> getStationsFromCSV(String path){
         Map<Long, String> toReturn = new HashMap<>();
         List<String[]> stationsCSV = ParsingUtils.parseCsv(path);
@@ -178,7 +174,11 @@ public class ParsingUtils {
         Map<Long, Station> toReturn = new HashMap<>();
         List<String[]> stationsCSV = ParsingUtils.parseCsv(path);
         for (String[] station : stationsCSV) {
-            toReturn.put(Long.parseLong(station[0]), new Station(Long.parseLong(station[0]), station[1], Double.parseDouble(station[2]), Double.parseDouble(station[3])));
+            toReturn.put(Long.parseLong(station[0]),
+                    new Station(Long.parseLong(station[0]),
+                            station[1],
+                            Double.parseDouble(station[2]),
+                            Double.parseDouble(station[3])));
         }
         return toReturn;
     }
