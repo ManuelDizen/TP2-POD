@@ -20,14 +20,6 @@ public class Pair<T, V> implements Serializable {
         return second;
     }
 
-    public void setFirst(T first) {
-        this.first = first;
-    }
-
-    public void setSecond(V second) {
-        this.second = second;
-    }
-
     @Override
     public String toString() {
         return "(" + first + ", " + second + ")";

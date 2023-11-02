@@ -25,14 +25,6 @@ public class Afflux {
         return neutral;
     }
 
-    public void setPositive(Integer positive) {
-        this.positive = positive;
-    }
-
-    public void setNegative(Integer negative) {
-        this.negative = negative;
-    }
-
     public void setNeutral(Integer neutral) {
         this.neutral = neutral;
     }

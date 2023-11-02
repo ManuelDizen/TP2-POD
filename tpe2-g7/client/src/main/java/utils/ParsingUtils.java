@@ -117,49 +117,6 @@ public class ParsingUtils {
         }
     }
 
-    public static void fillBikesIMap(IMap<Long, Trip> bikesIMap, String inPath) {
-        List<Trip> aux = new ArrayList<>();
-        int i = 0;
-        final int BATCH_SIZE = 300000;
-        do {
-            aux.clear();
-            try (Stream<String> lines = Files.lines(Path.of(inPath))) {
-                lines.skip(1 + (long) i * BATCH_SIZE).limit(BATCH_SIZE)
-                        .map(l -> l.split(";"))
-                        .map(bike -> {
-                            return new Trip(
-                                    LocalDateTime.parse(bike[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                                    Long.parseLong(bike[1]),
-                                    LocalDateTime.parse(bike[2], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                                    Long.parseLong(bike[3]),
-                                    Objects.equals(bike[4], "1")
-                            );
-                        })
-                        .forEach(aux::add);
-                i++;
-
-                // Add each Trip object to the bikesIMap with a counter as the key
-                for (int j = 0; j < aux.size(); j++) {
-                    bikesIMap.put((long) i * BATCH_SIZE + j, aux.get(j));
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } while (aux.size() == BATCH_SIZE);
-    }
-
-    public static void populateStations(IList<Station> stations, String stationsPath){
-        List<String[]> stationsCSV = ParsingUtils.parseCsv(stationsPath);
-        for (String[] station : stationsCSV) {
-            stations.add(new Station(
-                    Long.parseLong(station[0]),
-                    station[1],
-                    Double.parseDouble(station[2]),
-                    Double.parseDouble(station[3])
-            ));
-        }
-    }
-
     public static Map<Long, String> getStationsFromCSV(String path){
         Map<Long, String> toReturn = new HashMap<>();
         List<String[]> stationsCSV = ParsingUtils.parseCsv(path);

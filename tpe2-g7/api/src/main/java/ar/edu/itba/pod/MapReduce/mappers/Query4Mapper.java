@@ -31,7 +31,6 @@ public class Query4Mapper implements Mapper<Long, Trip, Pair<Long, LocalDate>, I
         if(Objects.equals(start, end)){
             if(start_date.getDayOfYear() != end_date.getDayOfYear()
                 && isValidStart(start_date, end_date)) {
-                //Este if queda feo, xq ademas start y end son el mismo dia, hago una validacion demas
                 context.emit(new Pair<>(start, start_date), -1);
                 context.emit(new Pair<>(end, end_date), 1);
             }

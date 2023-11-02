@@ -28,8 +28,6 @@ public class Query4ReducerFactory implements ReducerFactory<Pair<Long, LocalDate
             sum += aLong;
         }
 
-        //Quiero quedarme con la cantidad de dias donde la afluencia neta fue positiva
-        //neutral o negativa
         @Override
         public Integer finalizeReduce() {
             return sum > 0? 1 :
