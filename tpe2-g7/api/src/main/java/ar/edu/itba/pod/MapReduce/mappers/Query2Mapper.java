@@ -52,8 +52,10 @@ public class Query2Mapper implements Mapper<Long, Trip, Long, Pair<Double, Long>
             Long end = trip.getEmplacement_pk_end();
             if(!Objects.equals(start, end) && stations.containsKey(start)
                     && stations.containsKey(end)) {
+
                 Pair<Double, Long> pair = new Pair<>(distance(stations.get(start).getLocation(),
                         stations.get(end).getLocation()), ONE);
+
                 context.emit(start, pair);
             }
         }

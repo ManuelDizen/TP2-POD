@@ -19,6 +19,7 @@ import utils.ParamsModel;
 import utils.ParsingUtils;
 
 import java.security.InvalidParameterException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -28,7 +29,7 @@ import static utils.ParsingUtils.*;
 public class ClientQuery1 {
     private static final Logger logger = LoggerFactory.getLogger(ClientQuery1.class);
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    public static void main(String[] args) throws ExecutionException, InterruptedException, ParseException {
         logger.info("hz-config Client Starting ...");
 
         ParamsModel paramsModel;
@@ -50,7 +51,8 @@ public class ClientQuery1 {
                 "Inicio de la lectura del archivo");
 
         IMap<Long, Trip> trips = hazelcastInstance.getMap("trips");
-        populateTrips(trips, paramsModel.getTripsPath());
+        //populateTrips(trips, paramsModel.getTripsPath());
+        fillBikesIMap(trips, paramsModel.getTripsPath());
 
         Map<Long, String> stations = getStationsFromCSV(paramsModel.getStationsPath());
 

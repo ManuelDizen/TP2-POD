@@ -40,7 +40,6 @@ public class Query2Collator implements Collator<Map.Entry<Long, Double>, List<Qu
             // sublsit "casero"
             if(i < n) {
                 toReturn.add(auxList.get(i));
-                System.out.println(auxList.get(i).getAvg());
             }
             else
                 break;
