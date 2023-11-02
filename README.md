@@ -35,10 +35,13 @@ y la query 4 utiliza _-DstartDate=dd/MM/yyyy_ y _-DendDate=dd/MM/yyyy_.
 ```bash
 find . -name '*.sh' -exec sed -i -e 's/\r$//' {} \;
 ```
-- Aunque no fue aclarado en la consigna, la lectura de un _.csv_ de 6 millones de líneas es imposible. Debido
-a esta imposibilidad, se fijo, en la clase _ParsingUtils.java_, una constante denominada **MAX_LINES_TO_READ**, que indica
-el valor máximo de entradas que se leerán de un archivo. De ser más corto, no habrá inconveniente. 
-  - Si se quiere modificar, alcanza con entrar a la clase, cambiar el valor por el deseado, y comenzar desde el paso 1.
+- Aunque no fue aclarado en la consigna, la lectura de un _.csv_ de 14 millones de líneas es imposible (hazelcast da un
+  error de heap space). Debido a esta imposibilidad, se fijo, en la clase _ParsingUtils.java_, una constante denominada
+  **MAX_LINES_TO_READ**, que indica el valor máximo de entradas que se leerán de un archivo. De ser más corto, no habrá
+  inconveniente. 
+- Si se quiere modificar, alcanza con entrar a la clase, cambiar el valor por el deseado, y comenzar desde el paso 1.
+- Tambien, existe la funcion para realizar la lectura del archivo en forma de batch, sin embargo, para los testeos y el
+  analisis de la performance se desperdiciaba mucho tiempo.
 
 ## Integrantes:
 | Nombre                                              | Legajo |
